@@ -1,19 +1,13 @@
 import http from "../../../../config/httpCommon";
 
 
-const register = (data) => {
-    return http.post("/profile/register", data);
-};
-
-
-const setOwner = (data) => {
-    return http.post("/owner/register", data);
+const fetchCarData = (data) => {
+    return http.post("/car/fetching", data);
 };
 
 
 const api = {
-    register,
-    setOwner
+    fetchCarData
 };
   
 export default api;

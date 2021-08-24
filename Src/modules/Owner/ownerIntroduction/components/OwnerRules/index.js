@@ -19,7 +19,10 @@ const  OwnerRules = (props) => {
         <View style = {style.container}>
           <Text style = {style.bigText}>Welcome page</Text>   
           
-          <ScrollView>
+          <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          >
           <Text style = {style.cguText}>
             <Text style = {style.cguTitle}> The standard Lorem Ipsum passage, used since the 1500s </Text>
           The standard Lorem Ipsum passage, used since the 1500s

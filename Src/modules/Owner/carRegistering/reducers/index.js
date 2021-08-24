@@ -1,32 +1,35 @@
 import {
-    REGISTER_ERROR,
-    REGISTER_REQUEST,
-    REGISTER_SUCCESS,
-    SET_REGISTERING_DATA
+    CAR_REGISTER_ERROR,
+    CAR_REGISTER_REQUEST,
+    CAR_REGISTER_SUCCESS,
+    CAR_REGISTER_SETDATA
 } from '../../../../common/actionsTypes';
 
 const initialState = {
     error: false,
     loading: false,
     success: false,
+    data : {}
 };
 
-const registerOwnerReducer = (state = initialState, action) => {
+const carRegisterReducer = (state = initialState, action) => {
     const { type, payload } = action;
   
     switch (type) {
-        case REGISTER_REQUEST:
+        case CAR_REGISTER_REQUEST:
             return {...state, loading: true};
 
-        case REGISTER_ERROR:
+        case CAR_REGISTER_ERROR:
             return {...state, loading: false, error: true};
 
-        case REGISTER_SUCCESS:
+        case CAR_REGISTER_SUCCESS:
             return {...state, loading: false, success: true};
-      
+
+         case CAR_REGISTER_SETDATA:
+            return {...state, data: {...payload}};
       default:
         return state;
     }
   };
   
-  export default registerOwnerReducer;
+  export default carRegisterReducer;

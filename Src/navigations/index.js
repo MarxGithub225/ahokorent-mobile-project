@@ -6,7 +6,7 @@ import * as action from '../config/globalReducers/action'
 
 import { NavigationContainer } from "@react-navigation/native";
 
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Image, Text } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 
 import style from './style';
@@ -14,14 +14,10 @@ import AuthNavigator from './authNavigator';
 import { navigationRef } from './rootNavigator';
 import color from '../assets/themes/color';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { AHOKOAPP, DRIVERTABNAVIGATOR, LOGIN, OWNERINTRODUCTION, OWNERTABNAVIGATOR, WELCOME } from '../common/rootNames';
+import { AHOKOAPP, DRIVERTABNAVIGATOR, LOGIN, OWNERTABNAVIGATOR, WELCOME } from '../common/rootNames';
 import Welcome from '../welcomePage';
 import OwnerTabNavigator from './ownerTabNavigator';
-import { Router, Scene } from 'react-native-router-flux'
-import welcomePage from '../welcomePage';
-import { login } from '../commonModules/LoginPage/actions';
-import ownerIntroduction from '../modules/Owner/ownerIntroduction';
-
+import WelcomeNavigator from './welcomeNavigator';
 
 class AppNavContainer extends Component {
 
@@ -33,16 +29,10 @@ class AppNavContainer extends Component {
         };
     }
 
-
-    
-    
-  
-
-
     loadFirstimeState = async () => {
 
         try {
-            const value = await AsyncStorage.removeItem('firstTimeOpen');
+            const value = await AsyncStorage.getItem('firstTimeOpen');
 
             if(value !== null) {
                 this.props.setFirsTime(false);
@@ -61,7 +51,7 @@ class AppNavContainer extends Component {
     loadLoggedState = async () => {
 
         try {
-            const value = await AsyncStorage.removeItem('islogged');
+            const value = await AsyncStorage.getItem('islogged');
 
             if(value !== null) {
                this.props.setCurrentUser(JSON.parse(value));
@@ -79,7 +69,7 @@ class AppNavContainer extends Component {
     loadDefaultAppState = async () => {
 
         try {
-            const value = await AsyncStorage.removeItem('defaultApp');
+            const value = await AsyncStorage.getItem('defaultApp');
 
             if(value !== null) {
                 this.props.setDefaultApp(JSON.parse(value)); 
@@ -92,7 +82,7 @@ class AppNavContainer extends Component {
     loadSessionAppsState = async () => {
 
         try {
-            const value = await AsyncStorage.removeItem('sessionApps');
+            const value = await AsyncStorage.getItem('sessionApps');
 
             if(value !== null) {
                 const sessionApps = {
@@ -118,7 +108,7 @@ class AppNavContainer extends Component {
     loadSessionNumberVerified = async () => {
 
         try {
-            const value = await AsyncStorage.removeItem('numberVerify');
+            const value = await AsyncStorage.getItem('numberVerify');
 
             if(value !== null) {
                 
@@ -172,28 +162,31 @@ class AppNavContainer extends Component {
 
         if(this.state.isLoading) {
             return (
-              <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.white}}>
-                <Spinner
-                    visible={this.state.isLoading}
-                    textContent={'Chargement des données...'}
-                    textStyle={{ color: color.primary, fontFamily : 'CaviarDreams' }} />
+              <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.white, flexDirection: 'column'}}>
+                <Image
+                source = {require('../assets/images/ico2.png')}
+                resizeMode = "contain"
+                style = {{
+                    width: 190,
+                    height: 190 
+                }}
+                />
+                <View  style = {{textAlign: 'center'}}>
+                    <ActivityIndicator color = {color.primary} size = 'small' />
+                    <Text>Chargement des ressources...</Text>
+                </View>
               </View>
             )
         }
 
         return (
-            
             <View style = {style.container}>
-                <Router>
-                    <Scene key = "root">
-                        <Scene key = {WELCOME} component = {welcomePage} title = {WELCOME} initial={this.state.init === WELCOME} hideNavBar />
-                        <Scene key = {OWNERTABNAVIGATOR} component = {OwnerTabNavigator} hideNavBar title = {OWNERTABNAVIGATOR} initial={this.state.init === OWNERTABNAVIGATOR} />
-                        <Scene key = "AuthNavigator" component = {AuthNavigator} title = "AUTH NAVIGATOR" initial={this.state.init === LOGIN} hideNavBar/>
-                        <Scene key = {LOGIN} component = {login} title = {LOGIN} hideNavBar/>
-                        <Scene key = {OWNERINTRODUCTION} component = {ownerIntroduction} title = {OWNERINTRODUCTION} hideNavBar/>
-                    </Scene>
-                </Router>
-                
+                <NavigationContainer ref={navigationRef}>
+                {this.state.init === WELCOME ? <WelcomeNavigator />
+                : this.state.init === OWNERTABNAVIGATOR ? <OwnerTabNavigator />
+                :<AuthNavigator />
+                }
+                </NavigationContainer>
             </View>
         );
     }

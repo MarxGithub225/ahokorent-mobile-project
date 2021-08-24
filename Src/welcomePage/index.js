@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, { Component, useEffect, useState } from 'react';
 import { StatusBar, Text, View, ScrollView, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
 
@@ -14,8 +15,9 @@ import color from '../assets/themes/color';
 import style from './style';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import { Actions } from 'react-native-router-flux'
+
 const  Welcome = (props) => {
+    const {navigate} = useNavigation();
 
     const [numberVerified, setNumberVerify] = useState(null)
     const setFirstTime = async () => {
@@ -24,16 +26,14 @@ const  Welcome = (props) => {
 
     }
     
-    const setAction = (action , root) => {
+    const setAction = (action, root) => {
         props.setDefaultApp(action);
-
-        const r = root;
-        Actions.Login()
+        navigate(root);
     }
     useEffect (async () => {
         setFirstTime();
         const value = await AsyncStorage.getItem('numberVerify');
- 
+
         setNumberVerify(value)
     }, [])
 
@@ -44,7 +44,8 @@ const  Welcome = (props) => {
             <SafeAreaView>
                
                 <ScrollView
-                    
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                 >
 
                 <View style = {style.header}>

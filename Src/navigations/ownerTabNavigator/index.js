@@ -1,22 +1,64 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { CARREGISTERING, OWNERPROFILE, OWNERSETTINGS } from '../../common/rootNames';
 import ownerSettings from '../../modules/Owner/ownerSettings';
 import ownerProfile from '../../modules/Owner/ownerProfile';
 import carRegistering from '../../modules/Owner/carRegistering';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import color from '../../assets/themes/color';
-import { NavigationContainer } from '@react-navigation/native';
-import { navigationRef } from '../rootNavigator';
-class OwnerTabNavigator extends Component {
-    render() {
-        const Tab = createBottomTabNavigator();
+import {createStackNavigator} from '@react-navigation/stack';
+import {LOGIN, REGISTER_OWNER, PASSFORGOT, OWNERINTRODUCTION} from '../../common/rootNames';
 
-        const CustomTabBarButton  = ({children, onPress}) => (
+import color from '../../assets/themes/color';
+
+import LoginPage from '../../commonModules/LoginPage';
+import RegisterOwner from '../../modules/Owner/registerOwner';
+import PassForgot from '../../commonModules/PassForgot';
+import ownerIntroduction from '../../modules/Owner/ownerIntroduction';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
+
+const horizontalAnimation = {
+    gestureDirection: 'horizontal',
+    cardStyleInterpolator: ({ current, layouts }) => {
+      return {
+        cardStyle: {
+          transform: [
+            { 
+              translateX: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [layouts.screen.width, 0],
+              }),
+            },
+          ],
+        },
+      };
+    },
+  };
+  
+class OwnerTabNavigator extends Component { 
+    constructor (props) {
+        super(props);
+        this.state = {
+            hide: false
+        }
+    }
+
+    componentDidMount() {
+        this.setState({hide: false})
+    }
+
+    getTabBarVisible() {
+        this.setState({hide: true});
+    }  
+ 
+
+    render() {
+        const Tab = createBottomTabNavigator(); 
+
+        const CustomTabBarButton  = ({children, onPress, accessibilityState}) => (
             <TouchableOpacity
-            onPress = {onPress}
+            onPress = {() => {onPress(), this.getTabBarVisible()}}
 
             style = {{
                 top: -30,
@@ -27,21 +69,21 @@ class OwnerTabNavigator extends Component {
             >
                 <View
                 style = {{
-                    width: 70,
-                    height: 70,
+                    width: typeof(accessibilityState) !== 'undefined' && !Object.values(accessibilityState)[0] ? 50 : 0,
+                    height: typeof(accessibilityState) !== 'undefined' && !Object.values(accessibilityState)[0] ? 50 : 0,
                     borderRadius: 35,
                     backgroundColor: color.primary
                 }}
                 >
-                    {children}
+                    {typeof(accessibilityState) !== 'undefined' && !Object.values(accessibilityState)[0] ? children : (<Text></Text>)}
                 </View>
             </TouchableOpacity>
         );
 
-        return (
-            <NavigationContainer ref={navigationRef}>
-                <Tab.Navigator
+        const TabNav = () => (
+            <Tab.Navigator
                 initialRouteName={OWNERPROFILE}
+                headerMode="none"
                 screenOptions={{
                     tabBarActiveTintColor: '#000',
                 }}
@@ -49,14 +91,14 @@ class OwnerTabNavigator extends Component {
                 tabBarOptions = {{
                     showLabel: false,
                     style : {
-                        position: 'absolute',
-                        bottom: 25,
+                        position: !this.state.hide ? 'absolute' : 'relative', 
+                        bottom: !this.state.hide ? 10 : 0,
                         left: 10,
                         right: 10,
                         elevation: 0,
                         backgroundColor: color.white,
                         borderRadius: 15,
-                        height: 90,
+                        height: !this.state.hide ? 70 : 0,
                         ...styles.shadow
                     }
                 }}
@@ -66,7 +108,7 @@ class OwnerTabNavigator extends Component {
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: 10}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/user.png')}
                                 resizeMode = "contain"
@@ -92,7 +134,7 @@ class OwnerTabNavigator extends Component {
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: 10}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/car.png')}
                                 resizeMode = "contain"
@@ -115,31 +157,34 @@ class OwnerTabNavigator extends Component {
 
 
                 <Tab.Screen name='newCar' component={carRegistering} 
-                
-                options={{
+                listeners = {{focus: () => BackHandler.addEventListener('hardwareBackPress',this.setState({hide: false}))
+                ,blur: () => BackHandler.removeEventListener('hardwareBackPress',this.setState({hide: false}))
+                }}
+                options={({ route }) => ({
+                    
                     tabBarIcon : ({focused}) => (
                         <Image 
                             source = {require('../../assets/images/profile_icons/plus.png')}
                             resizeMode = "contain"
                             style = {{
-                                width: 30,
-                                height: 30,
+                                width: 25,
+                                height: 25,
                                 tintColor: color.white
                             }}
                         />
                     ),
                     tabBarButton : (props) => (
                         <CustomTabBarButton {...props}/>
-                    )
-                }}
-                />
+                    ),
+                    tabBarVisible: false
+                })} />
 
 
                 <Tab.Screen name='locations' component={carRegistering} 
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: 10}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/location.png')}
                                 resizeMode = "contain"
@@ -164,7 +209,7 @@ class OwnerTabNavigator extends Component {
                     
                     options={{
                         tabBarIcon : ({focused}) => (
-                            <View style = {{alignItems: 'center', justifyContent: 'center', top: 10}}>
+                            <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
                                 <Image 
                                     source = {require('../../assets/images/profile_icons/settings.png')}
                                     resizeMode = "contain"
@@ -185,7 +230,17 @@ class OwnerTabNavigator extends Component {
                     }}
                 />
             </Tab.Navigator>
-            </NavigationContainer>
+        )
+
+        const Stack = createStackNavigator();
+        return (
+            <Stack.Navigator headerMode="none" screenOptions={horizontalAnimation} initialRouteName = 'tab' mode="modal"> 
+            <Stack.Screen name='tab' component={TabNav} />
+            <Stack.Screen name={LOGIN} component={LoginPage} />
+            <Stack.Screen name={PASSFORGOT} component={PassForgot} />
+            <Stack.Screen name={REGISTER_OWNER} component={RegisterOwner} />
+            <Stack.Screen name={OWNERINTRODUCTION} component={ownerIntroduction} />
+            </Stack.Navigator>
         );
     }
 }

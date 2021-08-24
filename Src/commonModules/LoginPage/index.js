@@ -80,6 +80,7 @@ const Login =  (props) =>{
 
   const {loginReducer, globalReducer} = props;
   const profile = globalReducer.default_app === 'user_app' ? 'Partenaire' : globalReducer.default_app === 'owner_app' ? 'Propriétaire' : 'Driver'
+  
   return (
 
       <SafeAreaView style = {style.container}>
@@ -91,7 +92,9 @@ const Login =  (props) =>{
 
         </View>
 
-        <ScrollView    
+        <ScrollView  
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}  
         >
 
         

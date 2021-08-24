@@ -6,19 +6,46 @@ import color from '../../../assets/themes/color';
 export default StyleSheet.create({
 
 
-    centerText: {
-      fontSize: 18,
-      color: '#777'
-    },
-    textBold: {
-      fontWeight: '500',
-      color: '#000'
-    },
-    buttonText: {
-      fontSize: 21,
-      color: 'rgb(0,122,255)'
-    },
-    buttonTouchable: {
-      padding: 16
-    }
+  root: {
+    flex: 1,
+},
+upperSection: {
+    flex: 1,
+    elevation: 10,
+    zIndex: 100
+},
+instruction : {
+  marginHorizontal: 10,
+  margin: 25
+},
+instructionText: {
+  paddingHorizontal: 10,
+  fontSize: 18,
+  color: color.primary,
+  textTransform: 'uppercase',
+  textAlign: 'center',
+  fontFamily : 'CaviarDreams'
+},
+lowerSection: {
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+},
+camera: {
+    height: '100%',
+},
+preview: {
+  flex: 1,
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+},
+capture: {
+  flex: 0,
+  backgroundColor: '#fff',
+  borderRadius: 5,
+  padding: 15,
+  paddingHorizontal: 20,
+  alignSelf: 'center',
+  margin: 20,
+},
 });

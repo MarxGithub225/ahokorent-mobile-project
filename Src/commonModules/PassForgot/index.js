@@ -101,7 +101,10 @@ const PassForgot = (props) =>{
 
         </View>
 
-        <ScrollView>
+        <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        >
 
         
         <Text style = {style.loginUser}>
