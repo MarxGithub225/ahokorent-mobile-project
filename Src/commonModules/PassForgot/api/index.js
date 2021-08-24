@@ -2,7 +2,7 @@ import http from "../../../config/httpCommon";
 
 
 const passforgot = (data) => {
-    return http.post("/profile/updatePass", data);
+    return http.put("/profile/updatePass", data);
 };
 
 

@@ -1,7 +1,7 @@
 import {
-    LOGING_ERROR,
-    LOGING_REQUEST,
-    LOGING_SUCCESS
+    PASSFORGOT_REQUEST,
+    PASSFORGOT_ERROR,
+    PASSFORGOT_SUCCESS
 } from '../../../common/actionsTypes';
 
 const initialState = {
@@ -14,13 +14,13 @@ const passForgotReducer = (data = initialState, action) => {
     const { type, payload } = action;
   
     switch (type) {
-        case LOGING_REQUEST:
+        case PASSFORGOT_REQUEST:
             return {...data, loading: true};
 
-        case LOGING_ERROR:
+        case PASSFORGOT_ERROR:
             return {...data, loading: false, error: true};
 
-        case LOGING_SUCCESS:
+        case PASSFORGOT_SUCCESS:
             return {...data, loading: false, success: true};
       
       default:

@@ -15,7 +15,6 @@ export const fetchCarData = (data) => async (dispatch) =>{
     const res = await api.fetchCarData(data);
 
     if(res.data.status) {
-      console.log('CHECKING DATA', res.data.dataDecode);
 
       // dataStolen
       dispatch ({

@@ -9,7 +9,7 @@ import {Alert, Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomButton from '../../common/components/customButton';
 import Input from '../../common/components/input';
-import {PASSFORGOT, REGISTER_OWNER} from '../../common/rootNames';
+import {OWNERINTRODUCTION, PASSFORGOT, REGISTER_OWNER} from '../../common/rootNames';
 import style from './style';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -80,6 +80,7 @@ const Login =  (props) =>{
 
   const {loginReducer, globalReducer} = props;
   const profile = globalReducer.default_app === 'user_app' ? 'Partenaire' : globalReducer.default_app === 'owner_app' ? 'Propriétaire' : 'Driver'
+  
   
   return (
 
@@ -175,7 +176,8 @@ const Login =  (props) =>{
             <TouchableOpacity
             style = {style.register}
               onPress={() => {
-                navigate(REGISTER_OWNER);
+                globalReducer.numberVerified ? 
+                navigate(REGISTER_OWNER) : navigate(OWNERINTRODUCTION);
               }}>
               <Text style =  {{color: '#343434', fontSize: 17, textAlign: 'center', fontFamily: 'CaviarDreams'}}>Je veux m'inscrire</Text>
             </TouchableOpacity>

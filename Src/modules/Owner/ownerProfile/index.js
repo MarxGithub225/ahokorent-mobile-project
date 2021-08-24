@@ -292,7 +292,7 @@ const ownerProfile = (props) => {
           <View style = {styles.listBottomSideAction}>
             <TouchableOpacity 
             style = {styles.action}
-            onPress = {console.log('ok')}
+            onPress = {console.log('')}
             >
               <Text> <Icon name = 'star' /> </Text> 
               <Text> Noter </Text>
@@ -308,7 +308,7 @@ const ownerProfile = (props) => {
             
             <TouchableOpacity 
             style = {styles.action}
-            onPress = {console.log('ok')}
+            onPress = {console.log('')}
             > 
               <Text> <Icon name = 'share' /> </Text> 
               <Text> Partager </Text>
@@ -369,11 +369,11 @@ const ownerProfile = (props) => {
                 }}
                 />
               </View>
-              <View style = {styles.info}>
+              {current_user && (<View style = {styles.info}>
                 <Text style = {styles.infoItem}>{current_user.firstname} {current_user.lastname}</Text>
                 <Text style = {styles.separator}>|</Text>
                 <Text style = {styles.infoItem}>{current_user.phone.replace('00', '+')}</Text>
-              </View>
+              </View>)}
           </View>
       </View>
 

@@ -53,7 +53,6 @@ export const login = (data, props) => async (dispatch) =>{
         }
     
       } catch (error) {
-        console.log('Login error', error);
         dispatch ({
               type: LOGING_ERROR
         })

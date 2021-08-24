@@ -1,45 +1,36 @@
-import React, {useEffect, useState } from 'react';
+import React, {useState } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from './actions';
 
 import {useNavigation} from '@react-navigation/native';
-import {Alert, Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {Alert, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomButton from '../../common/components/customButton';
 import Input from '../../common/components/input';
-import {REGISTER_OWNER} from '../../common/rootNames';
 import style from './style';
 
-import Message from '../../common/components/message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import color from '../../assets/themes/color';
  
-import logo from '../../assets/images/logo.png';
 import SnackBar from 'rn-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
 import validator from 'validator';
-import {OWNERTABNAVIGATOR} from '../../common/rootNames';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const PassForgot = (props) =>{
 
   const {navigate} = useNavigation();
-  const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const [email , setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
 
   const onSubmit = async () => {
-    if(!email || !password) {
+    if(!email) {
       _snackError('Veuillez renseigner tous les champs.');
       return;
     }
-    if (!passValid (password)) {
-      _snackError('Votre mot de passe n\'est pas assez sécurisé.');
-      return;
-    }
-
+    
     if (email.includes("@") && !validator.isEmail(email.toLowerCase())) {
       _snackError('E-mail invalide !');
       return;
@@ -49,30 +40,27 @@ const PassForgot = (props) =>{
 
     const results = value ? JSON.parse(value) : '';
 
-    const data = {
-      email: email.includes("@") ? email.toLowerCase() : '00' + results.cca2 + email,
-      password: password
+
+    const {globalReducer} = props;
+
+    const verifData = email.includes("@") ? email.toLowerCase() : '00' + results.cca2 + email; 
+    const userExist = globalReducer.profiles.filter(u => (u.email.toLowerCase() === verifData || u.phone === verifData)).length >  0 ? true: false
+
+    if (!userExist) {
+      _snackError('Ce profile n\'existe pas dans notre système.');
+      return;
     }
 
-    props.login(data);
 
-    setTimeout(() => {
-      navigate(OWNERTABNAVIGATOR)
-    }, 3000);
+    const data = {
+      email: email.includes("@") ? email.toLowerCase() : '00' + results.cca2 + email
+    }
+    
+    props.sendNewPass(data, props);
+
   };
 
-  const passValid = value => {
-      
-    if(
-      validator.isStrongPassword(value, {
-        minLength: 6, minLowercase: 1,
-        minUppercase: 1, minNumbers: 1, minSymbols: 0
-      })
-    )
-    return true;
-    else return false;
-  }
-
+  
   const _snackError = (text) => {
     return (
       SnackBar.show(text, {
@@ -83,7 +71,7 @@ const PassForgot = (props) =>{
     )
   }
 
-  const {loginReducer, globalReducer} = props;
+  const {passForgotReducer, globalReducer} = props;
   const profile = globalReducer.default_app === 'user_app' ? 'Partenaire' : globalReducer.default_app === 'owner_app' ? 'Propriétaire' : 'Driver'
   return (
 
@@ -135,9 +123,8 @@ const PassForgot = (props) =>{
 
 
           <CustomButton
-            disabled={loginReducer.loading}
+            disabled={passForgotReducer.loading}
             onPress={() => {onSubmit ()}}
-            // loading={loginReducer.loading}
             primary
             title="Envoyer un mot de passe"
           />
@@ -148,7 +135,7 @@ const PassForgot = (props) =>{
       </View>
 
           <Spinner
-            visible={loginReducer.loading}
+            visible={passForgotReducer.loading}
             textContent={'Patientez...'}
             textStyle={{ color: '#fff', fontFamily : 'CaviarDreams' }} />
           

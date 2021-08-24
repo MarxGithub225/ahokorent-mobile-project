@@ -70,13 +70,12 @@ const  OwnerRules = (props) => {
           </ScrollView>
 
 
-          <View style = {style.FlatButton}>
+            <View style = {style.FlatButton}>
                 <CustomButton
                   onPress={() =>{navigate(LOGIN)}}
                   white
                   title="Commencer"
                 />
-
                 
             </View>
         </View>

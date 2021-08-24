@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import {
     PASSFORGOT_REQUEST,
     PASSFORGOT_ERROR,
@@ -31,7 +30,8 @@ const _snackError = (text) => {
   }
 
 // SET LOGIN
-export const login = (data, props) => async (dispatch) =>{
+export const sendNewPass = (data, props) => async (dispatch) =>{
+
 
     dispatch ({
         type: PASSFORGOT_REQUEST
@@ -41,12 +41,13 @@ export const login = (data, props) => async (dispatch) =>{
     try {
         const res = await api.passforgot(data);
     
-        if(res.data.status){
+        
+        if(res.data){
             dispatch ({
                 type: PASSFORGOT_SUCCESS
             })
 
-            _snackError ('Mot de passe envoyé.');
+            _snackSuccess ('Mot de passe envoyé.');
             setTimeout(() => {
                 props.navigation.navigate(LOGIN);
             }, 2000);
@@ -58,7 +59,6 @@ export const login = (data, props) => async (dispatch) =>{
         }
     
       } catch (error) {
-          console.log('Login error', error)
         dispatch ({
               type: PASSFORGOT_ERROR
         })

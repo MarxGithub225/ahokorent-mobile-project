@@ -55,6 +55,16 @@ const RegisterOwner = (props) => {
           _snackError('E-mail invalide !');
           return;
         }
+
+        const {globalReducer} = props;
+        
+        const userExist = globalReducer.profiles.filter(u => u.email.toLowerCase() === email.toLowerCase()).length >  0 ? true: false
+
+
+        if (userExist) {
+          _snackError('Vous êtes déjà propriétaire de véhicule, veuillez vous connecter.');
+          return;
+        }
       const data = {
         lastname: lastname,
         firstname: firstname,
