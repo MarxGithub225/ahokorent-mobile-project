@@ -1,8 +1,7 @@
 import {
-    REGISTER_ERROR,
-    REGISTER_REQUEST,
-    REGISTER_SUCCESS,
-    SET_REGISTERING_DATA
+    UPDATEOWNER_ERROR,
+    UPDATEOWNER_REQUEST,
+    UPDATEOWNER_SUCCESS,
 } from '../../../../common/actionsTypes';
 
 const initialState = {
@@ -11,17 +10,17 @@ const initialState = {
     success: false,
 };
 
-const registerOwnerReducer = (state = initialState, action) => {
+const ownerSettingsReducer = (state = initialState, action) => {
     const { type, payload } = action;
   
     switch (type) {
-        case REGISTER_REQUEST:
+        case UPDATEOWNER_REQUEST:
             return {...state, loading: true};
 
-        case REGISTER_ERROR:
+        case UPDATEOWNER_ERROR:
             return {...state, loading: false, error: true};
 
-        case REGISTER_SUCCESS:
+        case UPDATEOWNER_SUCCESS:
             return {...state, loading: false, success: true};
       
       default:
@@ -29,4 +28,4 @@ const registerOwnerReducer = (state = initialState, action) => {
     }
   };
   
-  export default registerOwnerReducer;
+  export default ownerSettingsReducer;

@@ -116,7 +116,7 @@ const UpdateProfile =  (props) => {
                     onPress={ () => {updateInformations ()}}
                     primary
                     title="Enregister"
-                />
+                /> 
                 </View>
 
 

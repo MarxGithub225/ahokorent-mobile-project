@@ -1,19 +1,13 @@
 import http from "../../../../config/httpCommon";
 
 
-const register = (data) => {
-    return http.post("/profile/register", data);
-};
-
-
-const setOwner = (data) => {
-    return http.post("/owner/register", data);
+const update = (data) => {
+    return http.put("/profile/register", data);
 };
 
 
 const api = {
-    register,
-    setOwner
+    update
 };
   
 export default api;

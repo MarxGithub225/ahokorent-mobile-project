@@ -110,7 +110,7 @@ const PassForgot = (props) =>{
             labelColor = {style.labelColor}
             value={null}
             onChangeText={(value) => {
-              setEmail(value)
+              setEmail(value.replace(' ', ''))
             }}
 
             leftIcon={

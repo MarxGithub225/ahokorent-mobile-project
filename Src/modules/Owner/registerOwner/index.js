@@ -124,7 +124,7 @@ const RegisterOwner = (props) => {
           iconPosition="right"
           value={null}
           onChangeText={(value) => {
-            setLastName(value)
+            setLastName(value.replace(' ', ''))
           }}
 
           leftIcon={
@@ -141,7 +141,7 @@ const RegisterOwner = (props) => {
             iconPosition="right"
             value={null}
             onChangeText={(value) => {
-              setFirstName(value)
+              setFirstName(value.replace(' ', ''))
             }}
 
             leftIcon={
@@ -159,7 +159,7 @@ const RegisterOwner = (props) => {
             iconPosition="right"
             value={null}
             onChangeText={(value) => {
-              setEmail(value)
+              setEmail(value.replace(' ', ''))
             }}
 
             leftIcon={
@@ -194,7 +194,7 @@ const RegisterOwner = (props) => {
               </TouchableOpacity>
             }
             onChangeText={(value) => {
-              setPassword(value)
+              setPassword(value.replace(' ', ''))
             }}
           />
 

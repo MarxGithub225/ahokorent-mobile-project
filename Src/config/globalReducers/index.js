@@ -5,11 +5,13 @@ import smsconfirmationReducer from "../../commonModules/Confirmation/reducers";
 import registerOwnerReducer from "../../modules/Owner/registerOwner/reducers";
 import passForgotReducer from "../../commonModules/PassForgot/reducers";
 import carRegisterReducer from "../../modules/Owner/carRegistering/reducers";
+import ownerSettingsReducer from "../../modules/Owner/ownerSettings/reducers";
 export default combineReducers({
     globalReducer,
     loginReducer,
     passForgotReducer,
     smsconfirmationReducer,
     registerOwnerReducer,
-    carRegisterReducer
+    carRegisterReducer,
+    ownerSettingsReducer 
 });

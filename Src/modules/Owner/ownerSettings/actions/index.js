@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {
-    REGISTER_REQUEST,
-    REGISTER_ERROR,
-    REGISTER_SUCCESS
+    UPDATEOWNER_ERROR,
+    UPDATEOWNER_REQUEST,
+    UPDATEOWNER_SUCCESS,
 } from '../../../../common/actionsTypes';
 
 import api from '../api';
@@ -11,16 +11,16 @@ import color from '../../../../assets/themes/color';
 
 
 
-export const Register = (data) => async (dispatch) =>{
+export const Update = (data) => async (dispatch) =>{
 
   dispatch ({
-        type: REGISTER_REQUEST
+        type: UPDATEOWNER_REQUEST
   })
   try {
-    const res = await api.register(data);
+    const res = await api.update(data);
 
     dispatch ({
-          type: REGISTER_SUCCESS
+          type: UPDATEOWNER_SUCCESS
     })
 
     const ownerData = {
@@ -46,7 +46,7 @@ export const Register = (data) => async (dispatch) =>{
 
   } catch (error) {
     dispatch ({
-          type: REGISTER_ERROR
+          type: UPDATEOWNER_ERROR
     })
   }
 };

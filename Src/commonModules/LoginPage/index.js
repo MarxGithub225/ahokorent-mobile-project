@@ -115,7 +115,7 @@ const Login =  (props) =>{
             labelColor = {style.labelColor}
             value={null}
             onChangeText={(value) => {
-              setEmail(value)
+              setEmail(value.replace(' ', ''))
             }}
 
             leftIcon={
@@ -150,7 +150,7 @@ const Login =  (props) =>{
               </TouchableOpacity>
             }
             onChangeText={(value) => {
-              setPassword(value)
+              setPassword(value.replace(' ', ''))
             }}
           />
 
