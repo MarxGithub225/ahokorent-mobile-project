@@ -16,10 +16,11 @@ export const fetchCarData = (data) => async (dispatch) =>{
 
     if(res.data.status) {
 
+      console.log(res.data.dataDecode.decode)
       // dataStolen
       dispatch ({
         type: CAR_REGISTER_SETDATA,
-        payload: res.data.dataDecode 
+        payload: res.data.dataDecode.decode
       })
     }
 

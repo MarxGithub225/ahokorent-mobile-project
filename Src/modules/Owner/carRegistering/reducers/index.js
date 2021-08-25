@@ -9,7 +9,7 @@ const initialState = {
     error: false,
     loading: false,
     success: false,
-    data : {}
+    data : []
 };
 
 const carRegisterReducer = (state = initialState, action) => {
@@ -26,7 +26,7 @@ const carRegisterReducer = (state = initialState, action) => {
             return {...state, loading: false, success: true};
 
          case CAR_REGISTER_SETDATA:
-            return {...state, data: {...payload}};
+            return {...state, data: payload};
       default:
         return state;
     }

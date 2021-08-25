@@ -55,7 +55,7 @@ const CustomButton = ({
               color: disabled ? 'black' : white ? color.primary : color.white,
               paddingLeft: loading ? 5 : 0,
               fontSize: 15,
-              fontFamily : 'CaviarDreams'
+              fontFamily : 'CaviarDreamsBold'
             }}>
             {loading ? 'Please wait...' : title}
           </Text>

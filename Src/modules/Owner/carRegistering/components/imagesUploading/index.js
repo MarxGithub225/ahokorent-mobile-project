@@ -8,6 +8,10 @@ import Modal from 'react-native-modal';
 import style from './style';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '../../../../../common/components/customButton';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as action from '../../actions';
 class imagesUploading extends Component {
 
     constructor(props) {
@@ -28,18 +32,16 @@ class imagesUploading extends Component {
           }
       }
       nextStep = () => {
-
         const { next } = this.props;
-    
         // Go to next step
-        next();
+        next();   
       };
     
      goBack = () =>{
         const { back } = this.props;
         // Go to previous step
         back();
-      }
+      } 
 
       
        close = () => this.setState({visible: false});
@@ -72,6 +74,9 @@ class imagesUploading extends Component {
       };
     
     render() {
+
+      const {carRegisterReducer} = this.props
+      console.log('DATA DECODED => ' , carRegisterReducer)
         return (
             <View style = {style.container}>
                 <TouchableOpacity
@@ -174,4 +179,14 @@ class imagesUploading extends Component {
     }
 }
 
-export default imagesUploading;
+const mapStateToProps = state => {
+  return {...state}
+  }
+  
+  const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+      ...action,
+  }, dispatch);
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)( imagesUploading );
