@@ -35,10 +35,10 @@ const Login =  (props) =>{
       _snackError('Veuillez renseigner tous les champs.');
       return;
     }
-    if (!passValid (password)) {
-      _snackError('Votre mot de passe n\'est pas assez sécurisé.');
-      return;
-    }
+    // if (!passValid (password)) {
+    //   _snackError('Votre mot de passe n\'est pas assez sécurisé.');
+    //   return;
+    // }
 
     if (email.includes("@") && !validator.isEmail(email.toLowerCase())) {
       _snackError('E-mail invalide !');

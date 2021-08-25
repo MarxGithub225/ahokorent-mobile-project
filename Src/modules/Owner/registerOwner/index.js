@@ -76,18 +76,13 @@ const RegisterOwner = (props) => {
         type: 1
       }
 
-      props.Register(data);
+      props.Register(data, props);
       
 
-      setTimeout(() => {
-        goToLogin()
-      }, 2000);
+      
     };
 
 
-    const goToLogin = () => {
-      navigate(LOGIN);
-    }
     const _snackError = (text) => {
       return (
         SnackBar.show(text, {

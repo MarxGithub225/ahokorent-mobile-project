@@ -43,7 +43,7 @@ export const login = (data, props) => async (dispatch) =>{
             })
             setTimeout(() => {
                 props.navigation.navigate(OWNERTABNAVIGATOR);
-            }, 1000);
+            }, 200);
         }else {
              dispatch ({
                 type: LOGING_ERROR

@@ -12,7 +12,7 @@ export const LOGOUT = 'LOGOUT';
 export const WELCOME = 'Welcome';
 export const OWNERINTRODUCTION = 'ownerIntroduction';
 
-export const OWNERTABNAVIGATOR = 'ownerTabNavigator';
+export const OWNERTABNAVIGATOR = 'OwnerTabNavigator';
 export const DRIVERTABNAVIGATOR = 'driverTabNavigator';
 export const AHOKOAPP = 'ahokoapp';
 
@@ -20,3 +20,6 @@ export const AHOKOAPP = 'ahokoapp';
 export const OWNERSETTINGS = 'ownerSettings';
 export const OWNERPROFILE = 'ownerProfile';
 export const CARREGISTERING = 'carRegistering';
+
+export const OWNEREDITPROFILE = 'UpdateProfile';
+export const OWNERSETTINGSSCREEN = 'SettingsScreen'; 

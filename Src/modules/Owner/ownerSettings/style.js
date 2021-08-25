@@ -19,7 +19,8 @@ export default StyleSheet.create({
       color: color.primary,
       textTransform: 'uppercase',
       textAlign: 'center',
-      fontFamily : 'CaviarDreams'
+      fontFamily : 'CaviarDreams',
+      marginBottom: 25
     },
 
     icon: {

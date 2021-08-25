@@ -80,9 +80,12 @@ class OwnerTabNavigator extends Component {
             </TouchableOpacity>
         );
 
-        const TabNav = () => (
+        
+
+        const Stack = createStackNavigator();
+        return (
             <Tab.Navigator
-                initialRouteName={OWNERPROFILE}
+                initialRouteName={OWNERPROFILE} 
                 headerMode="none"
                 screenOptions={{
                     tabBarActiveTintColor: '#000',
@@ -157,8 +160,8 @@ class OwnerTabNavigator extends Component {
 
 
                 <Tab.Screen name='newCar' component={carRegistering} 
-                listeners = {{focus: () => BackHandler.addEventListener('hardwareBackPress',this.setState({hide: false}))
-                ,blur: () => BackHandler.removeEventListener('hardwareBackPress',this.setState({hide: false}))
+                listeners = {{focus: () => BackHandler.addEventListener('hardwareBackPress', () => this.setState({hide: false}))
+                ,blur: () => BackHandler.removeEventListener('hardwareBackPress', () => this.setState({hide: false}))
                 }}
                 options={({ route }) => ({
                     
@@ -230,17 +233,6 @@ class OwnerTabNavigator extends Component {
                     }}
                 />
             </Tab.Navigator>
-        )
-
-        const Stack = createStackNavigator();
-        return (
-            <Stack.Navigator headerMode="none" screenOptions={horizontalAnimation} initialRouteName = 'tab' mode="modal"> 
-            <Stack.Screen name='tab' component={TabNav} />
-            <Stack.Screen name={LOGIN} component={LoginPage} />
-            <Stack.Screen name={PASSFORGOT} component={PassForgot} />
-            <Stack.Screen name={REGISTER_OWNER} component={RegisterOwner} />
-            <Stack.Screen name={OWNERINTRODUCTION} component={ownerIntroduction} />
-            </Stack.Navigator>
         );
     }
 }

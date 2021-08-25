@@ -85,7 +85,7 @@ const  Welcome = (props) => {
                     <TouchableOpacity
                     activeOpacity = {.6}
                     onPress={() => {
-                        setAction('owner_app', !numberVerified ? OWNERINTRODUCTION : LOGIN);
+                        setAction('owner_app', LOGIN);
                       }}
                     >
 

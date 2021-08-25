@@ -8,10 +8,11 @@ import {
 import api from '../api';
 import SnackBar from 'rn-snackbar';
 import color from '../../../../assets/themes/color';
+import { LOGIN } from '../../../../common/rootNames';
 
 
 
-export const Register = (data) => async (dispatch) =>{
+export const Register = (data, props) => async (dispatch) =>{
 
   dispatch ({
         type: REGISTER_REQUEST
@@ -38,7 +39,10 @@ export const Register = (data) => async (dispatch) =>{
                 backgroundColor: color.primary,
                 textColor: color.white,
             })
-    
+            
+            setTimeout(() => {
+              props.navigation.navigate(LOGIN);
+            }, 200);
         }
     } catch (error) { 
     console.log('Setting Owner Error', error)

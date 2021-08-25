@@ -1,42 +1,39 @@
-import React, {useState } from 'react';
-import { Text, View, TouchableOpacity} from 'react-native';
+import React from 'react';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as action from './actions';
+import {createStackNavigator} from '@react-navigation/stack';
+import UpdateProfile from './navigation/updateProfile';
+import SettingsScreen from './components/settings';
+import { OWNEREDITPROFILE, OWNERSETTINGSSCREEN, WELCOME } from '../../../common/rootNames';
+import authNavigator from '../../../navigations/authNavigator';
+import welcomePage from '../../../welcomePage';
 
-import Input from '../../../common/components/input';
+const horizontalAnimation = {
+  gestureDirection: 'horizontal',
+  cardStyleInterpolator: ({ current, layouts }) => {
+    return {
+      cardStyle: {
+        transform: [
+          {
+            translateX: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [layouts.screen.width, 0],
+            }),
+          },
+        ],
+      },
+    };
+  },
+};
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import color from '../../../assets/themes/color';
+const SettingScreen = (props) => {
 
-import style from './style';
-import CustomButton from '../../../common/components/customButton';
-import SnackBar from 'rn-snackbar';
-import Spinner from 'react-native-loading-spinner-overlay';
-import validator from 'validator';
-import {useNavigation} from '@react-navigation/native';
-import { LOGIN } from '../../../common/rootNames';
-
-const ownerSettings = (props) => {
-  
-  return (
-    <View style = {style.container}>
-      
-      <Text style = {style.loginInstruction}>Paramètres</Text>
-
-    </View>
-    );
+  const OwnerSettingStack = createStackNavigator();
+  return <OwnerSettingStack.Navigator headerMode="none" screenOptions={horizontalAnimation} initialRouteName = {OWNERSETTINGSSCREEN} mode="modal"> 
+            <OwnerSettingStack.Screen name={OWNERSETTINGSSCREEN} component={SettingsScreen} />
+            <OwnerSettingStack.Screen name={OWNEREDITPROFILE} component={UpdateProfile} />
+            <OwnerSettingStack.Screen name={WELCOME} component={welcomePage} />
+        </OwnerSettingStack.Navigator>
 }
 
-const mapStateToProps = state => {
-return {...state}
-}
 
-const mapDispatchToProps = (dispatch) => {
-return bindActionCreators({
-    ...action,
-}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)( ownerSettings );
+export default SettingScreen;
