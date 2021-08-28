@@ -12,13 +12,32 @@ import CustomButton from '../../../../../common/components/customButton';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from '../../actions';
+
+import face from '../../../../../assets/images/carIcons/face.png';
+import arriere from '../../../../../assets/images/carIcons/arriere.png';
+import boot from '../../../../../assets/images/carIcons/boot2.png';
+import interriorBack from '../../../../../assets/images/carIcons/interriorBack.png';
+import interriorFront from '../../../../../assets/images/carIcons/interriorFront.png';
+import profile from '../../../../../assets/images/carIcons/profile.png';
+
+
 class imagesUploading extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             images: [],
-            visible: false
+            visible: false,
+            forme : [
+              {label: 'Face' , value: null, illustration: face},
+              {label: 'Arrière' , value: null, illustration: arriere},
+              {label: 'Profile' , value: null, illustration: profile},
+              {label: 'Intérieur avant' , value: null, illustration: interriorFront},
+              {label: 'Intérieur arrière' , value: null, illustration: interriorBack},
+              {label: 'Coffre', value: null, illustration: boot}
+            ], 
+            selectedForm: null,
+            isReady: false
         }
       }
 
@@ -30,6 +49,22 @@ class imagesUploading extends Component {
                this.setState({images: this.state.images})
             }
           }
+      }
+
+      verif = () => {
+        let error = false;
+
+        this.state.forme.forEach(data => {
+          if(!data.value) {
+            error = true
+          }
+        })
+
+        if(error) {
+          return;
+        }else {
+          this.nextStep()
+        }
       }
       nextStep = () => {
         const { next } = this.props;
@@ -45,7 +80,7 @@ class imagesUploading extends Component {
 
       
        close = () => this.setState({visible: false});
-        open = () => this.setState({visible: true});
+        open = (value) => this.setState({visible: true, selectedForm: value});
 
       chooseImage = () => {
         ImagePicker.openPicker({
@@ -54,8 +89,16 @@ class imagesUploading extends Component {
           cropping: true,
         })
           .then(image => {
-            const images = [] = this.state.images.push(image.path)
-            this.setState({images: images})
+
+            for (let v of this.state.forme) {
+              if(v.label === this.state.selectedForm) {
+                v.value = image.path
+              }
+            }
+            const state= this.state.forme;
+            console.log(state)
+            return;
+            this.setState({forme: state})
           })
           .finally(this.close);
       };
@@ -67,8 +110,16 @@ class imagesUploading extends Component {
           cropping: true,
         })
           .then(image => {
-            const images = [] = this.state.images.push(image.path)
-            this.setState({images: images})
+
+            for (let v of this.state.forme) {
+              if(v.label === this.state.selectedForm) {
+                v.value = image.path
+              }
+            }
+            const state= this.state.forme;
+            console.log(state)
+            return;
+            this.setState({forme: state})
           })
           .finally(this.close);
       };
@@ -76,7 +127,6 @@ class imagesUploading extends Component {
     render() {
 
       const {carRegisterReducer} = this.props
-      console.log('DATA DECODED => ' , carRegisterReducer)
         return (
             <View style = {style.container}>
                 <TouchableOpacity
@@ -87,7 +137,6 @@ class imagesUploading extends Component {
                 
                 <View>
                 <Text style = {style.instruction}>Ajouter les images du véhicules 
-                <Text style = {style.instructionSmall}> (Min: 3 | Max: 6)</Text>
                 </Text>
                 
                 </View>
@@ -98,24 +147,25 @@ class imagesUploading extends Component {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                     >
-                    <View style = {style.imageList}>
-                    {this.state.images.map((url, key) => {
+                    <View style = {style.formList}>
+                    {this.state.forme.map((form, key) => {
 
                     return (
-                        <View style = {style.imageItem}>
-                        
-                                <Image
-                                style={style.uploadImage}
-                                source={{ uri: url}}
-                                key = {key}
-                                />
-                            
+                        <View style = {style.formItem}
+                        key = {key}
+                        >
                             <TouchableOpacity
-                            onPress={() => {this.delete(url)}}
-                            style = {style.deleteButton}
+                            style = {style.formItemButton}
+                            onPress = {() => {this.open(form.label)}}
                             >
-                            <Text style = {{color: color.white}}><Icon name = "times" /></Text>
-                        </TouchableOpacity>
+                                <Image
+                                resizeMode = "contain"
+                                style={[style.uploadImage, {borderRadius: 15}]}
+                                source={form.value ? { uri: form.value}: form.illustration}
+                                />
+
+                                      {!form.value &&<Text style = {{color: color.danger, fontFamily: 'CaviarDreamsBold', fontSize: 20}}>{form.label}</Text>}
+                            </TouchableOpacity>
                         </View>
 
 
@@ -124,30 +174,19 @@ class imagesUploading extends Component {
                     </View>
 
 
-                    {this.state.images.length <=5 && (<View style = {style.AddButtonArea}>
-                        <TouchableOpacity
-                        onPress={this.open}
-                        style = {style.AddButton}
-                        >
-                        <Image 
-                            source = {require('../../../../../assets/images/profile_icons/plus.png')}
-                            resizeMode = "contain"
-                            style = {{
-                                width: 30,
-                                height: 30,
-                                tintColor: color.white
-                            }}
-                        />
-                        </TouchableOpacity>
-                    </View>)}
+                    
                     </ScrollView>
                     <View style = {style.FlatButton}>
-                   {(this.state.images.length >2 && this.state.images.length<6)  && <CustomButton
+                    <TouchableOpacity
+                    onPress={ () => {this.verif()}}
+                    >
+                    <CustomButton
                     
-                        onPress={ () => {this.nextStep()}}
-                        primary
-                        title="Suivant"
-                    />}
+                    
+                    primary
+                    title="Suivant"
+                />
+                    </TouchableOpacity>
                     </View>
 
                     <Modal

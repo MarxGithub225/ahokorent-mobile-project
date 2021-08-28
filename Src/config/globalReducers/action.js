@@ -6,7 +6,12 @@ import {
     SET_PROFILES,
     SET_OWNERS,
     SET_NUMBER_VERIFY,
-    SETINITIALROOT
+    SETINITIALROOT,
+    SET_BRANDS,
+    SET_MODELS,
+    SET_TYPES,
+    SET_CARACTERISTICS,
+    SET_GEARBOX,
 } from '../../common/actionsTypes';
 
 import api from './api';
@@ -61,6 +66,8 @@ export const setNumberVerify = (data) => async (dispatch) =>{
         payload: data
     });
 };
+
+
 // GET PROFILES
 export const getProfiles = () => async (dispatch) =>{
     
@@ -97,3 +104,97 @@ export const getOwners = () => async (dispatch) =>{
     
     }
 };
+
+// GET BRANDS
+export const getBrands = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getBrands();
+        if(result)
+        {
+            dispatch ({
+                type: SET_BRANDS    ,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting brands Error', error)
+    
+    }
+};
+
+
+// GET MODELS
+export const getModels = () => async (dispatch) =>{
+    try {
+        const result = await api.getModels();
+    
+        if(result.data.status)
+        {
+            dispatch ({
+                type: SET_MODELS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting models Error', error)
+    
+    }
+};
+
+// GET CARACTERISTICS
+export const getCaracteristics = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getCaracteristics();
+        if(result)
+        {
+            dispatch ({
+                type: SET_CARACTERISTICS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting caracteristics Error', error)
+    
+    }
+};
+
+
+// GET TYPES
+export const getTypes = () => async (dispatch) =>{
+    try {
+        const result = await api.getTypes();
+    
+        if(result.data.status)
+        {
+            dispatch ({
+                type: SET_TYPES,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting types Error', error)
+    
+    }
+};
+
+
+// GET GEARBOX
+export const getGearbox = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getGearbox();
+        if(result)
+        {
+            dispatch ({
+                type: SET_GEARBOX,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting gearbox Error', error)
+    
+    }
+};
+

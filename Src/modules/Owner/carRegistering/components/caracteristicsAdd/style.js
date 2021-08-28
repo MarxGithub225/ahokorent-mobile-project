@@ -15,7 +15,14 @@ export default StyleSheet.create({
         paddingTop: 25,
         height : '100%'
     },
-
+    flex : {
+      flex: 1,
+      justifyContent : 'center',
+      paddingHorizontal: 15
+    },
+    form : {
+      padding: 15
+    },
     avatar: {
       paddingTop: 20,
       height: 50,
@@ -101,39 +108,13 @@ export default StyleSheet.create({
         flexWrap: 'wrap',
         marginVertical: 25
       },
-
-      formList : {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexWrap: 'wrap',
-        marginVertical: 25,
-      },
-      formItem : {
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginVertical: 10,
-        width: deviceWith / 2,
-        paddingHorizontal: 7,
-        textAlign: 'center',
-        height: 150
-      },
-      formItemButton : {
-        width: '100%',
-        height: '100%',
-        borderWidth: 1,
-        borderColor:color.primary,
-        textAlign: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 15,
-        paddingHorizontal: 5
-      },
-
       uploadImage: {
-        width: '100%', 
         height: 90,
+        width: 90,
         borderRadius: 15,
+        marginRight: 20,
+        borderWidth: 1,
+        borderColor: color.primary
       },
       
 
@@ -156,4 +137,23 @@ export default StyleSheet.create({
         shadowRadius: 3.5,
         elevation: 5
       },
+
+      buttonStyle : {
+        width: '100%', 
+        borderRadius: 15,backgroundColor : 'transparent',
+        borderWidth: 1,
+        borderColor: color.grey,
+        borderRadius: 15,
+        marginTop: 15,
+        marginBottom: 15,
+        paddingLeft: 35
+      },
+      buttonTextStyle : {
+        color: '#666',
+        fontSize: 15,
+        fontFamily: 'CaviarDreams',
+        textAlign: 'left',
+        paddingLeft: 12,
+        marginVertical: 5
+      }
 });

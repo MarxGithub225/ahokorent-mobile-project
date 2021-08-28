@@ -6,12 +6,22 @@ import {
     SET_PROFILES,
     SET_OWNERS,
     SET_NUMBER_VERIFY,
-    SETINITIALROOT
+    SETINITIALROOT,
+    SET_BRANDS,
+    SET_MODELS,
+    SET_TYPES,
+    SET_CARACTERISTICS,
+    SET_GEARBOX,
 } from '../../common/actionsTypes';
 
 const initialState = {
     profiles: [],
     owners: [],
+    brands: [],
+    models: [],
+    types: [],
+    caracteristics: [],
+    gearbox: [],
     first_time: true,
     numberVerified: false,
     current_user: null,
@@ -48,6 +58,22 @@ const globalReducer = (data = initialState, action) => {
 
         case SET_OWNERS:
             return {...data, owners: payload};
+        
+        case SET_MODELS:
+            return {...data, models: payload};
+            
+        case SET_CARACTERISTICS:
+            return {...data, caracteristics: payload};
+           
+        case SET_TYPES:
+            return {...data, types: payload};
+            
+        case SET_GEARBOX:
+            return {...data, gearbox: payload};
+            
+        case SET_BRANDS:
+            return {...data, brands: payload};
+        
         case SETINITIALROOT:
             return {...data, initialRoot: payload};
       default:

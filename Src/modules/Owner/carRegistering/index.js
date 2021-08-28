@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import AnimatedMultistep from "react-native-animated-multistep";
 import barcodeScanning from './components/barcodeScanning';
+import caracteristicsAdd from './components/caracteristicsAdd';
 import completedInformations from './components/completedInformations';
+import dataCkecking from './components/dataCkecking';
 import imagesUploading from './components/imagesUploading';
 
 const allSteps = [
   { name: "step 1", component: barcodeScanning },
-  { name: "step 2", component: imagesUploading },
-  { name: "step 3", component: completedInformations },
+  { name: "step 2", component: dataCkecking },
+  { name: "step 3", component: caracteristicsAdd },
+  { name: "step 4", component: imagesUploading },
+  { name: "step 5", component: completedInformations },
 ];
 class  carRegistering extends Component {
 

@@ -6,6 +6,11 @@ export const SET_SESSIONS = "SET_SESSIONS";
 export const SET_PROFILES= "SET_PROFILES";
 export const SET_OWNERS= "SET_OWNERS";
 export const SETINITIALROOT = "SETINITIALROOT";
+export const SET_BRANDS = "SET_BRANDS";
+export const SET_MODELS = "SET_MODELS";
+export const SET_TYPES = "SET_TYPES";
+export const SET_CARACTERISTICS = "SET_CARACTERISTICS";
+export const SET_GEARBOX = "SET_GEARBOX";
 
 export const LOGING_REQUEST = "LOGING_REQUEST";
 export const LOGING_SUCCESS = "LOGING_SUCCESS";

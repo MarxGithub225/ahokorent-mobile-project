@@ -55,12 +55,12 @@ class barcodeScanning extends Component {
 
         if (this.state.isBarcodeScannerEnabled) {
           this.setState({loading: true, isBarcodeScannerEnabled: false})
-          this.props.fetchCarData ({vindata: 'AHTKK8CD100676394'})
+          this.props.fetchCarData ({vindata: 'AHTKK8CD100676394'});
           
           setTimeout(() => {
             this.setState({loading: false, show: true})
             this.nextStep();
-          }, 3000);
+          }, 2000);
         }
       }
       
@@ -176,8 +176,18 @@ class barcodeScanning extends Component {
             onBarCodeRead={this.onBarCodeRead.bind(this)}
             onFocusChanged={() => {}}
             onZoomChanged={() => {}}
-            permissionDialogTitle={'Permission to use camera'}
-            permissionDialogMessage={'We need your permission to use your camera phone'}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
+            androidRecordAudioPermissionOptions={{
+              title: 'Permission to use audio recording',
+              message: 'We need your permission to use your audio',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}
             style={style.preview}
             type={this.state.camera.type}
         >

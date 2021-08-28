@@ -50,7 +50,8 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginVertical: 10,
-    width: '100%'
+    width: '100%',
+
   },
 
   touch : {

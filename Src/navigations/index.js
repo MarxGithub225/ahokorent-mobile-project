@@ -136,6 +136,11 @@ class AppNavContainer extends Component {
 
         this.props.getProfiles()
         this.props.getOwners()
+        this.props.getBrands()
+        this.props.getModels()
+        this.props.getCaracteristics()
+        this.props.getTypes()
+        this.props.getGearbox()
 
         setTimeout(() => {
             this.setState({isLoading: false})

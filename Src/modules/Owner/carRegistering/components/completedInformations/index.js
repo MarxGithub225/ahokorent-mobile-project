@@ -116,7 +116,7 @@ class completedInformations extends Component {
           <Textarea
             containerStyle={style.textareaContainer}
             style={style.textarea}
-            onChangeText={console.log('')}
+            // onChangeText={console.log('')}
             maxLength={255}
             placeholder={'Description du véhicule'}
             placeholderTextColor={'#c7c7c7'}

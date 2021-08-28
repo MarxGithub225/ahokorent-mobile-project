@@ -15,8 +15,6 @@ export const fetchCarData = (data) => async (dispatch) =>{
     const res = await api.fetchCarData(data);
 
     if(res.data.status) {
-
-      console.log(res.data.dataDecode.decode)
       // dataStolen
       dispatch ({
         type: CAR_REGISTER_SETDATA,

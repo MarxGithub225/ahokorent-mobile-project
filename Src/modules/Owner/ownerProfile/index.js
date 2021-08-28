@@ -292,7 +292,7 @@ const ownerProfile = (props) => {
           <View style = {styles.listBottomSideAction}>
             <TouchableOpacity 
             style = {styles.action}
-            onPress = {console.log('')}
+            // onPress = {console.log('')}
             >
               <Text> <Icon name = 'star' /> </Text> 
               <Text> Noter </Text>
@@ -308,7 +308,7 @@ const ownerProfile = (props) => {
             
             <TouchableOpacity 
             style = {styles.action}
-            onPress = {console.log('')}
+            // onPress = {console.log('')}
             > 
               <Text> <Icon name = 'share' /> </Text> 
               <Text> Partager </Text>
@@ -329,6 +329,7 @@ const ownerProfile = (props) => {
       <Item data={item} />
     );
   }
+
     return ( 
       <>
       <SafeAreaView style={styles.container}>
@@ -551,7 +552,7 @@ const ownerProfile = (props) => {
               <TextInput
               numberOfLines={4}
               style={styles.input}
-              onChangeText={console.log('')}
+              // onChangeText={console.log('')}
               placeholder="Votre commentaire..."
             />
 
