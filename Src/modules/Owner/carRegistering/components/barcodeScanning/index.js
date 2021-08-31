@@ -51,12 +51,22 @@ class barcodeScanning extends Component {
         back();
       }
 
+      onBarCodeType = () => {
+        this.setState({loading: true});
+        this.props.fetchCarData ({vindata: this.state.barcode});
+        this.props.setData({VIN: this.state.barcode}, null)
+        setTimeout(() => {
+          this.setState({loading: false, show: true})
+          this.nextStep();
+        }, 2000);
+      }
+
       onBarCodeRead = (scanResult) => {
 
         if (this.state.isBarcodeScannerEnabled) {
           this.setState({loading: true, isBarcodeScannerEnabled: false})
-          this.props.fetchCarData ({vindata: 'AHTKK8CD100676394'});
-          
+          this.props.fetchCarData ({vindata: '5N1AT2MT0KC773740'});
+          this.props.setData({VIN: this.state.barcode})
           setTimeout(() => {
             this.setState({loading: false, show: true})
             this.nextStep();
@@ -73,17 +83,6 @@ class barcodeScanning extends Component {
       }
       
 
-      onBarCodeRead(scanResult) {
-        console.warn(scanResult.type);
-        console.warn(scanResult.data);
-        if (scanResult.data != null) {
-      if (!this.barcodeCodes.includes(scanResult.data)) {
-        this.barcodeCodes.push(scanResult.data);
-        console.warn('onBarCodeRead call');
-      }
-        }
-        return;
-      }
     
       async takePicture() {
         if (this.camera) {
@@ -111,7 +110,9 @@ class barcodeScanning extends Component {
       }
       
       componentDidMount () { 
+        const {carRegisterReducer} = this.props
         this.setState({type: undefined})
+        this.setState({barcode: carRegisterReducer.VIN ? carRegisterReducer.VIN : this.state.barcode})
       }
       render () {
   
@@ -228,10 +229,10 @@ class barcodeScanning extends Component {
                     placeholder="Numéro de chassis *"
                     labelColor = {style.labelColor}
                     iconPosition="right"
-                    value={null}
-                    // onChangeText={(value) => {
-                    //     setLastName(value)
-                    // }}
+                    value={this.state.barcode}
+                    onChangeText={(value) => {
+                        this.setState({barcode: value})
+                    }}
 
                     leftIcon={
                         <Text>
@@ -240,12 +241,15 @@ class barcodeScanning extends Component {
                         
                     }
                   />
-
+                <TouchableOpacity 
+                    onPress = {() => {this.onBarCodeType()}}
+                    >
                 <CustomButton
                   
                     primary
                     title="Valider"
                 /> 
+                </TouchableOpacity>
                 </View>
 
                 <View style={[style.overlay, style.bottomOverlay]}>

@@ -8,7 +8,21 @@ const deviceWith = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export default StyleSheet.create({
-
+  form : {
+    marginTop: 25
+  },
+  label : {
+    marginLeft: 5,
+    marginBottom: -14,
+    fontFamily : 'CaviarDreamsBold',
+    color: color.primary
+  },
+  explain : {
+    fontSize: 14,
+    fontFamily : 'CaviarDreamsBold',
+    color: color.danger,
+    marginTop: -10
+  },
   container : {
     flex: 1,
     backgroundColor : color.white,
@@ -39,12 +53,15 @@ export default StyleSheet.create({
         height: 180,
         padding: 5,
         backgroundColor: '#F5FCFF',
+        marginTop: 20
       },
       textarea: {
         textAlignVertical: 'top',  // hack android
         height: 170,
         fontSize: 14,
         color: '#333',
+        fontFamily : 'CaviarDreams'
+        
       },
 
       descriptionSide: {

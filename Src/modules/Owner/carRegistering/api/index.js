@@ -5,9 +5,12 @@ const fetchCarData = (data) => {
     return http.post("/car/fetching", data);
 };
 
-
+const insertCarData = (data) => {
+    return http.post("/car/register", data);
+};
 const api = {
-    fetchCarData
+    fetchCarData,
+    insertCarData
 };
   
 export default api;

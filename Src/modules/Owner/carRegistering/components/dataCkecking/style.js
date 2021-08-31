@@ -144,6 +144,15 @@ export default StyleSheet.create({
         paddingLeft: 35
       },
       buttonTextStyle : {
+        color: color.primary,
+        fontSize: 15,
+        fontFamily: 'CaviarDreams',
+        textAlign: 'left',
+        paddingLeft: 12
+      }
+
+      ,
+      buttonTextStyleDefault : {
         color: '#666',
         fontSize: 15,
         fontFamily: 'CaviarDreams',

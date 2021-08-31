@@ -2,20 +2,23 @@ import {
   CAR_REGISTER_ERROR,
   CAR_REGISTER_REQUEST,
   CAR_REGISTER_SUCCESS,
-  CAR_REGISTER_SETDATA
+  CAR_REGISTER_SETDATA,
+  CAR_REGISTER_INPUTDATA
 } from '../../../../common/actionsTypes';
 
 import api from '../api';
 import SnackBar from 'rn-snackbar';
 import color from '../../../../assets/themes/color';
+import { OWNERPROFILE } from '../../../../common/rootNames';
 
 export const fetchCarData = (data) => async (dispatch) =>{
- 
   try {
     const res = await api.fetchCarData(data);
 
     if(res.data.status) {
       // dataStolen
+
+      console.log('data fetching =>', res.data.dataDecode.decode)
       dispatch ({
         type: CAR_REGISTER_SETDATA,
         payload: res.data.dataDecode.decode
@@ -27,79 +30,55 @@ export const fetchCarData = (data) => async (dispatch) =>{
   }
 };
 
-export const setData = (data) => async (dispatch) =>{
+export const setData = (data, props) => async (dispatch) =>{
 
+  
   dispatch ({
-        type: CAR_REGISTER_REQUEST
+    type: CAR_REGISTER_INPUTDATA,
+    payload: data
   })
-  try {
-    const res = await api.register(data);
 
-    dispatch ({
-          type: REGISTER_SUCCESS
-    })
-
-    const ownerData = {
-        reference : res.data.data.reference,
-        date: new Date().getTime()
-    }
-    try {
-        const result = await api.setOwner(ownerData);
-    
-        if(result.data.status)
-        {
-            SnackBar.show('Inscription réussie', {
-                style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
-                backgroundColor: color.primary,
-                textColor: color.white,
-            })
-    
-        }
-    } catch (error) { 
-    console.log('Setting Owner Error', error)
-    
-    }
-
-  } catch (error) {
-    dispatch ({
-          type: CAR_REGISTER_ERROR
-    })
+  if(props) {
+    const { next } = props;
+    next();
   }
 };
 
-export const Register = (data) => async (dispatch) =>{
+export const Register = (data, props) => async (dispatch) =>{
 
+  for (const [key, value] of Object.entries(data)) {
+    if(key === 'images') {
+      value.forEach(element => {
+        element.value = "data:image/jpeg;base64," + element.value
+      });
+    }
+  }
   dispatch ({
         type: CAR_REGISTER_REQUEST
   })
+
+  console.log('Put data', data)
+  return;
   try {
-    const res = await api.register(data);
+    const res = await api.insertCarData(data);
 
-    dispatch ({
-          type: REGISTER_SUCCESS
-    })
+    if(res.data.status) {
+      dispatch ({
+            type: REGISTER_SUCCESS
+      })
 
-    const ownerData = {
-        reference : res.data.data.reference,
-        date: new Date().getTime()
+      SnackBar.show('Inscription réussie', {
+        style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+          backgroundColor: color.primary,
+          textColor: color.white,
+      })
+
+      setTimeout(() => {
+        props.navigation.navigate(OWNERPROFILE)
+      }, 3000);
     }
-    try {
-        const result = await api.setOwner(ownerData);
     
-        if(result.data.status)
-        {
-            SnackBar.show('Inscription réussie', {
-                style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
-                backgroundColor: color.primary,
-                textColor: color.white,
-            })
     
-        }
-    } catch (error) { 
-    console.log('Setting Owner Error', error)
-    
-    }
-
   } catch (error) {
     dispatch ({
           type: CAR_REGISTER_ERROR

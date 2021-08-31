@@ -2,14 +2,18 @@ import {
     CAR_REGISTER_ERROR,
     CAR_REGISTER_REQUEST,
     CAR_REGISTER_SUCCESS,
-    CAR_REGISTER_SETDATA
+    CAR_REGISTER_SETDATA,
+    CAR_REGISTER_INPUTDATA
 } from '../../../../common/actionsTypes';
 
 const initialState = {
     error: false,
     loading: false,
     success: false,
-    data : []
+    data : [],
+    inputData: {
+        VIN : null
+    }
 };
 
 const carRegisterReducer = (state = initialState, action) => {
@@ -27,6 +31,8 @@ const carRegisterReducer = (state = initialState, action) => {
 
          case CAR_REGISTER_SETDATA:
             return {...state, data: payload};
+        case CAR_REGISTER_INPUTDATA:
+            return {...state, inputData: {...state.inputData,...payload}};
       default:
         return state;
     }

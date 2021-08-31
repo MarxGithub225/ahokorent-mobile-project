@@ -22,7 +22,9 @@ class caracteristicsAdd extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+          selectedItems : []
+        }
       }
 
 
@@ -41,9 +43,17 @@ class caracteristicsAdd extends Component {
       }
 
       
-    
-    render() {
+      validate = () =>{
+        const data = []
+        this.state.selectedItems.forEach(itm => {
+          data.push(itm.value)
+        })
 
+        this.props.setData({caracteristics : data.toString()}, this.props)
+      }
+    render() {
+      const {carRegisterReducer} = this.props;
+      console.log(carRegisterReducer)
           const caracteristics = []
 
           this.props.globalReducer.caracteristics.forEach((element, i) => {
@@ -86,12 +96,12 @@ class caracteristicsAdd extends Component {
                           placeholder = "Selectionner"
                           placeholderTextStyle = {{fontFamily: 'CaviarDreamsBold',}}
                           data={caracteristics}
-                          onSelect={(selectedItems) => console.log("SelectedItems: ", selectedItems)}
+                          onSelect={(selectedItems) => {this.setState({selectedItems: selectedItems})}}
                         />
 
                         <TouchableOpacity
                         style = {{marginTop: 25}}
-                        onPress={ () => {this.nextStep()}}
+                        onPress={ () => {this.validate()}}
                         >
                           <CustomButton
                                     primary

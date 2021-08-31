@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Platform, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import color from '../../../../../assets/themes/color';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '../../../../../common/components/customButton';
@@ -13,6 +14,8 @@ import style from './style';
 import { RadioButton, Button } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import Textarea from 'react-native-textarea';
+import SnackBar from 'rn-snackbar';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import moment from 'moment';
 class completedInformations extends Component {
@@ -20,8 +23,6 @@ class completedInformations extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          barcode: '',
-          loading: false,
           checked : 'noDelay',
           range : {
             startDate: Date | undefined,
@@ -29,7 +30,19 @@ class completedInformations extends Component {
           },
           open: false,
           driver: 'no',
-          modalVisible: false
+          modalVisible: false, 
+          inputData : {
+            CoutJour: null, 
+            Gain: null,
+            Description: null,
+            PrixProprio : null,
+            ComissionAhoko : null,
+            Tva : null,
+            Tdt : null,
+            Ardsi : null,
+            PrixAfficher : null,
+            BeneficeAhoko: null
+          }
         }
     }
 
@@ -53,9 +66,85 @@ class completedInformations extends Component {
       }
 
       onClose = () => {
-        this.setState({modalVisible: false})
-    }
+          this.setState({modalVisible: false})
+      }
+
+      _snackError = (text) => {
+        return (
+          SnackBar.show(text, {
+            style: { marginTop: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+            backgroundColor: color.danger,
+            textColor: color.white,
+            position: 'top'
+          })
+        )
+      }
+
+      validate = () => {
+        
+        const {carRegisterReducer} = this.props;
+        const {current_user} = props.globalReducer;
+        const data = {
+          ...carRegisterReducer.inputData,
+          RentingStart : this.state.range.startDate ? new Date(this.state.range.startDate).getTime() : null,
+          RentingEnd: this.state.range.endDate ? new Date(this.state.range.endDate).getTime() : null,
+          IsDriver: this.state.driver === 'no' ? false : true,
+          Date: new Date().getTime(),
+          PrixProprio: this.state.inputData.CoutJour,
+          CommissionAhoko: this.state.inputData.ComissionAhoko,
+          BeneficeAhoko: this.state.inputData.BeneficeAhoko,
+          Tva: this.state.inputData.Tva,
+          Tdt: this.state.inputData.Tdt,
+          Ardsi: this.state.inputData.Ardsi,
+          PrixAfficher: this.state.inputData.PrixAfficher,
+          RevenuProprio: this.state.inputData.Gain,
+          IsPromo: false,
+          PromoStart: null,
+          PromoEnd: null,
+          UpdateDate : new Date().getTime(),
+          Owner: current_user.reference
+        }
+
+        if(!this.state.inputData.CoutJour) {
+          this._snackError('Veuillez renseigner le côut journalier de location')
+          return;
+        }
+
+        if(this.state.inputData.Description) {
+          this._snackError('Veuillez ajouter une description du véhicule')
+          return;
+        }
+        this.props.Register(data, this.props)
+      }
+
+      calculate = (cout) => {
+        
+        let CoutJour = Number(cout);
+        let ComissionAhoko = Number(CoutJour * 0.1);
+        let Tva = Number(ComissionAhoko * 0.18);
+        let Tdt = Number(ComissionAhoko * 0.015);
+        let PrixAfficher = Number(CoutJour + ComissionAhoko + Tva + Tdt);
+        let Ardsi = Number (CoutJour * 0.05);
+        let Gain = Number (CoutJour - (Ardsi + ComissionAhoko));
+        let BeneficeAhoko = Number (ComissionAhoko * 2);
+
+        
+        this.setState({inputData: {
+          CoutJour: CoutJour,
+          Gain : Gain.toString(),
+          ComissionAhoko : ComissionAhoko,
+          Tva : Tva,
+          Tdt : Tdt,
+          Ardsi : Ardsi,
+          PrixAfficher : PrixAfficher,
+          BeneficeAhoko : BeneficeAhoko,
+        }})
+      }
+
+      
     render() {
+      const {carRegisterReducer} = this.props
+        console.log('Dats', carRegisterReducer)
         return (
             <View style = {style.container}>
             <TouchableOpacity
@@ -72,88 +161,119 @@ class completedInformations extends Component {
 
             <View style={style.form}>
 
-        <Input
-          placeholder="Coût journalier de location *"
-          labelColor = {style.labelColor}
-          iconPosition="right"
-          value={null}
-          onChangeText={(value) => {console.log(value)}}
-          keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
-          leftIcon={
-            <Text>
-                <Icon  name = "money-bill" style = {{color: color.grey, fontSize: 15}}/>
-            </Text>
-            
-          }
-        />
+          <Text style = {style.label}>Coût journalier de location</Text>
+          <Input
+            placeholder="Coût journalier de location *"
+            labelColor = {style.labelColor}
+            iconPosition="right"
+            value={this.state.inputData.CoutJour}
+            onChangeText={(value) => {this.calculate(value)}}
+            keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
+            leftIcon={
+              <Text>
+                  <Icon  name = "money-bill" style = {{color: color.grey, fontSize: 15}}/>
+              </Text>
+              
+            }
+          />
 
-        <View>
+        {this.state.inputData.Gain && <View >
+          <Text style = {style.label}>Votre revenu</Text>
+            <Input
+              placeholder="Votre revenu"
+              editable = {false}
+              labelColor = {style.labelColor}
+              iconPosition="right"
+              value={this.state.inputData.Gain}
+              onChangeText={(value) => {console.log(value)}}
+              keyboardType={Platform.OS === 'ios' ? 'number-pad' : 'numeric'}
+              leftIcon={
+                <Text>
+                    <MatIcon  name = "handshake" style = {{color: color.grey, fontSize: 15}}/>
+                </Text> 
+                
+              }
+            />
+            <Text style = {style.explain}>Votre revenu = 85% du coût journalier</Text>
+        </View>}
+        <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 25}}>
         <View style = {{justifyContent: 'center', alignItems: 'center'}}>
-        <RadioButton
-        color = {color.primary}
-        uncheckedColor = {color.grey}
-        value="noDelay"
-        status={ this.state.checked === 'noDelay' ? 'checked' : 'unchecked' }
-        onPress={() => this.setState({checked: 'noDelay'})}
-        />
-        <Text>Location continue</Text>
+          <RadioButton
+          color = {color.primary}
+          uncheckedColor = {color.grey}
+          value="noDelay"
+          status={ this.state.checked === 'noDelay' ? 'checked' : 'unchecked' }
+          onPress={() => this.setState({checked: 'noDelay'})}
+          />
+          <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Location continue</Text>
         </View>
         <View style = {{justifyContent: 'center', alignItems: 'center'}}>
-        <RadioButton
-        color = {color.primary}
-        uncheckedColor = {color.grey}
-            value="delay"
-            status={ this.state.checked === 'delay' ? 'checked' : 'unchecked' }
-            onPress={() => {this.setState({checked: 'delay', open: true})}}
-        />
-        <Text>Location périodique</Text>
+          <RadioButton
+          color = {color.primary}
+          uncheckedColor = {color.grey}
+              value="delay"
+              status={ this.state.checked === 'delay' ? 'checked' : 'unchecked' }
+              onPress={() => {this.setState({checked: 'delay', open: true})}}
+          />
+        <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Location périodique</Text>
         </View>
         
+        {/* {this.state.checked === 'delay' && 
+        <View>
+          <Text>Début : {this.state.range.startDate} </Text>
+          <Text>Fin : {this.state.range.endDate} </Text>
+        </View>
+        } */}
         </View>
 
 
           <View style = {style.descriptionSide}>
+          <Text style = {style.label}>Description du véhicule</Text>
           <Textarea
             containerStyle={style.textareaContainer}
             style={style.textarea}
-            // onChangeText={console.log('')}
+            defaultValue = {this.state.inputData.Description}
+            onChangeText={value => {this.setState({inputData : {...this.state.inputData , Description: value}})}}
             maxLength={255}
-            placeholder={'Description du véhicule'}
+            placeholder={'Description ici...'}
             placeholderTextColor={'#c7c7c7'}
             underlineColorAndroid={'transparent'}
         />
           </View>
 
-          <View>
-        <View style = {{justifyContent: 'center', alignItems: 'center'}}>
-        <RadioButton
-        color = {color.danger}
-        uncheckedColor = {color.grey}
-        value="no"
-        status={ this.state.driver === 'no' ? 'checked' : 'unchecked' }
-        onPress={() => this.setState({driver: 'no'})}
-        />
-        <Text>Véhicule sans chauffer</Text>
-        </View>
-        <View style = {{justifyContent: 'center', alignItems: 'center'}}>
-        <RadioButton
-        color = {color.danger}
-        uncheckedColor = {color.grey}
-            value="yes"
-            status={ this.state.driver === 'yes' ? 'checked' : 'unchecked' }
-            onPress={() => {this.setState({driver: 'yes', modalVisible: true})}}
-        />
-        <Text>Véhicule avec chauffeur</Text>
-        </View>
+          <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 25}}>
+          <View style = {{justifyContent: 'center', alignItems: 'center'}}>
+            <RadioButton
+            color = {color.danger}
+            uncheckedColor = {color.grey}
+            value="no"
+            status={ this.state.driver === 'no' ? 'checked' : 'unchecked' }
+            onPress={() => this.setState({driver: 'no'})}
+            />
+            <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Sans chauffer</Text>
+          </View>
+          <View style = {{justifyContent: 'center', alignItems: 'center'}}>
+            <RadioButton
+            color = {color.danger}
+            uncheckedColor = {color.grey}
+                value="yes"
+                status={ this.state.driver === 'yes' ? 'checked' : 'unchecked' }
+                onPress={() => {this.setState({driver: 'yes', modalVisible: true})}}
+            />
+            <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Avec chauffeur</Text>
+          </View>
         
         </View>
         <View style = {style.FlatButton}>
+          <TouchableOpacity
+          onPress = {() => {this.validate()}}
+          >
           <CustomButton
          
-            onPress={ () => {console.log('ok')}}
             primary
             title="Enregister"
           />
+          </TouchableOpacity>
         </View>
 
         
@@ -172,17 +292,15 @@ class completedInformations extends Component {
         }}
 
         locale={'nl'}
-        // validRange={{
-        //   startDate: new Date(2021, 1, 2),  // optional
-        //   endDate: new Date(), // optional
-        // }}
-        // onChange={} // same props as onConfirm but triggered without confirmed by user
-        // locale={'nl'} // optional
+        
+        onChange={e => {
+          this.setState({range: e})
+        }} // same props as onConfirm but triggered without confirmed by user
         saveLabel="Ok" // optional
         label="Selectionner une période" // optional
         startLabel="Du" // optional
         endLabel="Au" // optional
-        // animationType="slide" // optional, default is slide on ios/android and none on web
+        animationType="slide" // optional, default is slide on ios/android and none on web
       />
 
 <View style={style.centeredView}>
@@ -229,7 +347,12 @@ class completedInformations extends Component {
           </View>
         </View>
       </Modal>
-        </View>        
+        </View>   
+
+        <Spinner
+            visible={carRegisterReducer.loading}
+            textContent={'Patientez...'}
+            textStyle={{ color: '#fff', fontFamily : 'CaviarDreams' }} />     
             </View>
 
 

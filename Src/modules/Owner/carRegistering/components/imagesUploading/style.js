@@ -132,7 +132,7 @@ export default StyleSheet.create({
 
       uploadImage: {
         width: '100%', 
-        height: 90,
+        height: 120,
         borderRadius: 15,
       },
       

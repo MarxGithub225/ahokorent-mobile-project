@@ -12,7 +12,7 @@ import CustomButton from '../../../../../common/components/customButton';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from '../../actions';
-
+import SnackBar from 'rn-snackbar';
 import face from '../../../../../assets/images/carIcons/face.png';
 import arriere from '../../../../../assets/images/carIcons/arriere.png';
 import boot from '../../../../../assets/images/carIcons/boot2.png';
@@ -51,6 +51,17 @@ class imagesUploading extends Component {
           }
       }
 
+
+      _snackError = (text) => {
+        return (
+          SnackBar.show(text, {
+            style: { marginTop: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+            backgroundColor: color.danger,
+            textColor: color.white,
+            position: 'top'
+          })
+        )
+      }
       verif = () => {
         let error = false;
 
@@ -61,8 +72,11 @@ class imagesUploading extends Component {
         })
 
         if(error) {
+          this._snackError('Veuillez ajouter toutes les images')
           return;
         }else {
+          const data = {images: this.state.forme}
+          this.props.setData(data, this.props)
           this.nextStep()
         }
       }
@@ -84,9 +98,14 @@ class imagesUploading extends Component {
 
       chooseImage = () => {
         ImagePicker.openPicker({
-          width: 300,
-          height: 400,
+          width: 500,
+          height: 500,
           cropping: true,
+          cropperStatusBarColor: 'white',
+          cropperToolbarColor: 'white',
+          cropperActiveWidgetColor: 'white',
+          cropperToolbarWidgetColor: color.primary,
+          freeStyleCropEnabled: true
         })
           .then(image => {
 
@@ -105,9 +124,15 @@ class imagesUploading extends Component {
     
       openCamera = () => {
         ImagePicker.openCamera({
-          width: 300,
-          height: 400,
+          width: 500,
+          height: 500,
           cropping: true,
+          cropperStatusBarColor: 'white', 
+          cropperToolbarColor: 'white',
+          cropperActiveWidgetColor: 'white',
+          cropperToolbarWidgetColor: color.primary,
+          freeStyleCropEnabled: true,
+          mediaType: 'photo'
         })
           .then(image => {
 
@@ -124,6 +149,13 @@ class imagesUploading extends Component {
           .finally(this.close);
       };
     
+      componentDidMount () {
+        const {carRegisterReducer} = this.props
+        console.log('Images', carRegisterReducer)
+        if(carRegisterReducer.inputData.images) {
+          this.setState ({forme: carRegisterReducer.inputData.images})
+        }
+      }
     render() {
 
       const {carRegisterReducer} = this.props

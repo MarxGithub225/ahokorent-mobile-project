@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, Image} from 'react-native';
+import { Text, View, TouchableOpacity, Image, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import color from '../../../../../assets/themes/color';
 
@@ -14,17 +14,16 @@ import * as action from '../../actions';
 import Input from '../../../../../common/components/input';
 import { ActivityIndicator } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown';
+import SnackBar from 'rn-snackbar';
 
-import RNMultiSelect, {
-  IMultiSelectDataTypes,
-} from "@freakycoder/react-native-multiple-select";
+
 const needs = [
   {label : 'Make', placeHoler: 'Marque *', level: 1},
   {label : 'Manufacturer', placeHoler: 'Fabricant *', level: 0},
   {label : 'ProductType', placeHoler: 'Type de véhicule', level: 0},
   {label : 'CheckDigitValidity', placeHoler: '', level: 0},
   {label : 'SequentialNumber', placeHoler: 'Numéro sequentiel', level: 0},
-  {label : 'Body', placeHoler: 'Carrosserie', level: 1},
+  {label : 'Body', placeHoler: 'Carrosserie', level: 0},
   {label : 'EngineCylinders', placeHoler: 'Nombre de cylindre*', level: 1},
   {label : 'NumberOfDoors', placeHoler: 'Nombre de porte *', level: 1},
   {label : 'FuelTypePrimary', placeHoler: 'Carburant*', level: 0},
@@ -35,7 +34,7 @@ const needs = [
   {label : 'Engine', placeHoler: '', level: 0},
   {label : 'NumberOfSeats', placeHoler: 'Nombre de sièges', level: 1},
   {label : 'Drive', placeHoler: 'Type', level: 0},
-  {label : 'FuelSystem', placeHoler: 'Système de carburant', level: 0},
+  {label : 'FuelSystem', placeHoler: 'Système de carburant', level: 0}, 
   {label : 'FuelCapacity', placeHoler: 'Capacité du réservoir', level: 0},
   {label : 'FrontBreaks', placeHoler: '', level: 0}
 
@@ -72,50 +71,61 @@ class dataCkecking extends Component {
             visible: false,
             inputItems : [],
             isLoading : true,
-            inpuData : {
+            inputData : {
               Make : null,
-              Manufacturer : null,
-              ProductType : null,
-              ValidCheckDigit : null,
-              CheckDigitValidity : null,
-              SequentialNumber : null,
               Body : null,
               EngineCylinders : null,
               NumberOfDoors : null,
               FuelTypePrimary : null,
               Model : null,
               ModelYear : null,
-              Series : null,
               Transmission : null,
-              Engine : null,
               NumberOfSeats : null,
-              Drive : null,
-              FuelSystem : null,
-              FuelCapacity : null,
-              FrontBreaks : null,
-
-              // Make
-              // Body
-              // EngineCylinders
-              // NumberOfDoors
-              // Model
-              // ModelYear
-              // NumberOfSeats
-              // Tansmission
-              // Carburant
-              // Type
             },
             brandSelected: this.props.globalReducer.brands[0].libelle
         }
       }
 
 
+      _snackError = (text) => {
+        return (
+          SnackBar.show(text, {
+            style: { marginTop: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+            backgroundColor: color.danger,
+            textColor: color.white,
+            position: 'top'
+          })
+        )
+      }
 
       nextStep = () => {
-        console.log('okk');
-        const { next } = this.props;
-        // Go to next step
-        next();
+
+        if(!this.state.inputData.Make ||
+          !this.state.inputData.Body ||
+          !this.state.inputData.EngineCylinders ||
+          !this.state.inputData.NumberOfDoors ||
+          !this.state.inputData.FuelTypePrimary ||
+          !this.state.inputData.Model ||
+          !this.state.inputData.ModelYear ||
+          !this.state.inputData.Transmission ||
+          !this.state.inputData.NumberOfSeats 
+        ){
+          this._snackError('Certains champs sont vides.')
+          return;
+        }
+
+        this.state.inputItems.forEach( item => {
+          for (const [key, value] of Object.entries(this.state.inputData)) {
+              if(key !== item.label) {
+                const data = {...this.state.inputData, [item.label]: item.value}
+
+                this.setState({inputData: data})
+              }
+          }
+        })
+        
+        
+        this.props.setData(this.state.inputData, this.props)
       };
     
      goBack = () =>{
@@ -128,7 +138,7 @@ class dataCkecking extends Component {
         const returnDatas = [];
         const {carRegisterReducer} = this.props
 
-        
+        console.log
         
         needs.forEach(n => {
               
@@ -168,14 +178,48 @@ class dataCkecking extends Component {
         
 
         this.setState({inputItems: returnDatas});
+
+        if(carRegisterReducer.inputData.Make) {
+
+          for (const [key, value] of Object.entries(carRegisterReducer.inputData)) {
+            if(key !== 'VIN')
+            this.setState({
+              inputData: {...this.state.inputData, [key]:value}
+            });
+          }
+          
+
+          return;
+        }
+        returnDatas.forEach(t => {
+          this.setState({
+            inputData: {...this.state.inputData, [t.label]: t.value}
+          });
+        })
+        
+      }
+
+
+      onInputchange(name, value) {
+        this.setState({
+          inputData: {...this.state.inputData, [name]: value}
+        });
+
+        setTimeout(() => {
+          console.log(this.state.inputData)
+        }, 3000);
       }
 
       componentDidMount() {
         this.setDataItems()
-
+        
         setTimeout(() => {
-          this.setState({isLoading: false})
-      }, 3000);
+            this.setState({isLoading: false})
+            this.setState({brandSelected: this.props.globalReducer.brands[0].libelle})
+            this.setDataItems()
+        }, 3000);
+
+        console.log('PROPS DATA 2', this.props.carRegisterReducer.inputData)
       }
     
     render() {
@@ -198,9 +242,10 @@ class dataCkecking extends Component {
                 </View>
               )
           }
-          const {transmissions, inputItems} = this.state;
-          const {carRegisterReducer, globalReducer} = this.props
+          const {inputItems} = this.state;
+          const {globalReducer} = this.props
 
+          
           const transmitions = []
           for (let i = 0; i < globalReducer.gearbox.length; i++) {
             transmitions.push(globalReducer.gearbox[i].libelle)
@@ -273,29 +318,18 @@ class dataCkecking extends Component {
                             <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {style.buttonTextStyle}
+                            buttonTextStyle = {this.state.inputData[inp.label] ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             renderDropdownIcon={() => {
                               return (
                                 <Icon  name="chevron-down" color={"#666"} size={15} />
                               );
                               }}
+                              defaultValue = {this.state.inputData.Make}
                               defaultButtonText = {"Marque"}
                               data={brands.sort((a,b) => a < b ? -1 : 1)}
                               // defaultValue = {'Automatique'}
-                              onSelect={(selectedItem, index) => {
-                                this.setState({brandSelected: selectedItem})
-                                console.log(selectedItem)
-                              }}
-
-                              buttonTextAfterSelection={(selectedItem, index) => {
-                                // text represented after item is selected
-                                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                                return selectedItem
-                              }}
-                              rowTextForSelection={(item, index) => {
-                                // text represented for each item in dropdown
-                                // if data array is an array of objects then return item.property to represent item in dropdown
-                                return item
+                              onSelect={e => {
+                                this.onInputchange(inp.label, e)
                               }}
                             />
 
@@ -311,28 +345,18 @@ class dataCkecking extends Component {
                           <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {style.buttonTextStyle}
+                            buttonTextStyle = {this.state.inputData[inp.label] ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             renderDropdownIcon={() => {
                               return (
                                 <Icon  name="chevron-down" color={"#666"} size={15} />
                               );
                               }}
                               defaultButtonText = {"Modèle"}
+                              defaultValue = {this.state.inputData.Model}
                               data={models.length ? models.sort((a,b) => a < b ? -1 : 1) : ['Aucun modèle']}
                               // defaultValue = {'Automatique'}
-                              onSelect={(selectedItem, index) => {
-                                console.log(selectedItem)
-                              }}
-
-                              buttonTextAfterSelection={(selectedItem, index) => {
-                                // text represented after item is selected
-                                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                                return selectedItem
-                              }}
-                              rowTextForSelection={(item, index) => {
-                                // text represented for each item in dropdown
-                                // if data array is an array of objects then return item.property to represent item in dropdown
-                                return item
+                              onSelect={e => {
+                                this.onInputchange(inp.label, e)
                               }}
                             />
                             </View>
@@ -345,8 +369,13 @@ class dataCkecking extends Component {
                             placeholder={inp.placeholder}
                             labelColor = {style.labelColor}
                             iconPosition="right"
-                            value={inp.value}
-                            onChangeText={(value) => {console.log(value)}}
+                            value={this.state.inputData[inp.label] ? this.state.inputData[inp.label] : inp.value}
+                            keyboardType = {
+                              (inp.label === 'ModelYear' || inp.label === 'EngineCylinders' || inp.label === 'NumberOfDoors' || inp.label === 'NumberOfSeats')
+                               && Platform.OS ? 'number-pad' : inp.label === 'ModelYear' && Platform.Android ? 'numeric' : 'default'}
+                            onChangeText={e => {
+                              this.onInputchange(inp.label, e)
+                            }}
                           />}
                           </View>
                         )
@@ -357,35 +386,27 @@ class dataCkecking extends Component {
                         <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {style.buttonTextStyle}
+                            buttonTextStyle = {this.state.inputData['Transmission'] ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             renderDropdownIcon={() => {
                               return (
                                 <Icon  name="chevron-down" color={"#666"} size={15} />
                               );
                             }}
                             defaultButtonText = {"Tansmission"}
+                            defaultValue = {this.state.inputData.Transmission}
                             data={transmitions.sort((a,b) => a < b ? -1 : 1)}
                             // defaultValue = {'Automatique'}
-                            onSelect={(selectedItem, index) => {
-                              console.log(selectedItem, index)
+                            onSelect={e => {
+                              this.onInputchange('Transmission', e)
                             }}
-                            buttonTextAfterSelection={(selectedItem, index) => {
-                              // text represented after item is selected
-                              // if data array is an array of objects then return selectedItem.property to render after item is selected
-                              return selectedItem
-                            }}
-                            rowTextForSelection={(item, index) => {
-                              // text represented for each item in dropdown
-                              // if data array is an array of objects then return item.property to represent item in dropdown
-                              return item
-                            }}
+                            
                           />
 
 
                         <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {style.buttonTextStyle}
+                            buttonTextStyle = {this.state.inputData['FuelTypePrimary'] ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             drow
                             
                             renderDropdownIcon={() => {
@@ -394,26 +415,18 @@ class dataCkecking extends Component {
                               );
                             }}
                             defaultButtonText = {"Carburant"}
+                            defaultValue = {this.state.inputData.FuelTypePrimary}
                             data={['Diesel', 'Super']}
                             // defaultValue = {'Diesel'}
-                            onSelect={(selectedItem, index) => {
-                              console.log(selectedItem, index)
+                            onSelect={e => {
+                              this.onInputchange('FuelTypePrimary', e)
                             }}
-                            buttonTextAfterSelection={(selectedItem, index) => {
-                              // text represented after item is selected
-                              // if data array is an array of objects then return selectedItem.property to render after item is selected
-                              return selectedItem
-                            }}
-                            rowTextForSelection={(item, index) => {
-                              // text represented for each item in dropdown
-                              // if data array is an array of objects then return item.property to represent item in dropdown
-                              return item
-                            }}
+                            
                           />
                         <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {style.buttonTextStyle}
+                            buttonTextStyle = {this.state.inputData['Body'] ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             drow
                             
                             renderDropdownIcon={() => {
@@ -421,22 +434,14 @@ class dataCkecking extends Component {
                                 <Icon  name="chevron-down" color={"#666"} size={15} />
                               );
                             }}
-                            defaultButtonText = {"Type de véhicule"}
+                            defaultButtonText = {"Carosserie"}
+                            defaultValue = {this.state.inputData.Body}
                             data={types.sort((a,b) => a < b ? -1 : 1)}
                             // defaultValue = {'Diesel'}
-                            onSelect={(selectedItem, index) => {
-                              console.log(selectedItem, index)
+                            onSelect={e => {
+                              this.onInputchange('Body', e)
                             }}
-                            buttonTextAfterSelection={(selectedItem, index) => {
-                              // text represented after item is selected
-                              // if data array is an array of objects then return selectedItem.property to render after item is selected
-                              return selectedItem
-                            }}
-                            rowTextForSelection={(item, index) => {
-                              // text represented for each item in dropdown
-                              // if data array is an array of objects then return item.property to represent item in dropdown
-                              return item
-                            }}
+                            
                           />
                        
                       <TouchableOpacity
@@ -448,8 +453,6 @@ class dataCkecking extends Component {
                                         />
                         </TouchableOpacity>
                       </View>
-
-                    
                       
                     </ScrollView>
                     
