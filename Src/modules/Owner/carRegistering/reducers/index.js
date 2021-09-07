@@ -16,6 +16,16 @@ const initialState = {
     }
 };
 
+const initialize  = {
+    error: false,
+    loading: false,
+    success: false,
+    data : [],
+    inputData: {
+        VIN : null
+    }
+};
+
 const carRegisterReducer = (state = initialState, action) => {
     const { type, payload } = action;
   
@@ -27,7 +37,8 @@ const carRegisterReducer = (state = initialState, action) => {
             return {...state, loading: false, error: true};
 
         case CAR_REGISTER_SUCCESS:
-            return {...state, loading: false, success: true};
+            return {...state, ...initialize};
+            // return {...state, loading: false, success: true};
 
          case CAR_REGISTER_SETDATA:
             return {...state, data: payload};

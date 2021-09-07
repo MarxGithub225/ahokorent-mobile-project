@@ -7,35 +7,12 @@ import ownerProfile from '../../modules/Owner/ownerProfile';
 import carRegistering from '../../modules/Owner/carRegistering';
 
 import {createStackNavigator} from '@react-navigation/stack';
-import {LOGIN, REGISTER_OWNER, PASSFORGOT, OWNERINTRODUCTION} from '../../common/rootNames';
 
 import color from '../../assets/themes/color';
 
-import LoginPage from '../../commonModules/LoginPage';
-import RegisterOwner from '../../modules/Owner/registerOwner';
-import PassForgot from '../../commonModules/PassForgot';
-import ownerIntroduction from '../../modules/Owner/ownerIntroduction';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
-
-
-const horizontalAnimation = {
-    gestureDirection: 'horizontal',
-    cardStyleInterpolator: ({ current, layouts }) => {
-      return {
-        cardStyle: {
-          transform: [
-            { 
-              translateX: current.progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [layouts.screen.width, 0],
-              }),
-            },
-          ],
-        },
-      };
-    },
-  };
-  
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as action from '../../config/globalReducers/action';
 class OwnerTabNavigator extends Component { 
     constructor (props) {
         super(props);
@@ -45,14 +22,15 @@ class OwnerTabNavigator extends Component {
     }
 
     componentDidMount() {
-        this.setState({hide: false})
+        const {hide} = this.props.globalReducer;
+        this.setState({hide: hide})
     }
 
     getTabBarVisible() {
-        this.setState({hide: true});
+        this.props.setHide(true);
     }  
  
-
+   
     render() {
         const Tab = createBottomTabNavigator(); 
 
@@ -94,14 +72,14 @@ class OwnerTabNavigator extends Component {
                 tabBarOptions = {{
                     showLabel: false,
                     style : {
-                        position: !this.state.hide ? 'absolute' : 'relative', 
-                        bottom: !this.state.hide ? 10 : 0,
+                        position: !this.props.globalReducer.hide ? 'absolute' : 'relative', 
+                        bottom: !this.props.globalReducer.hide ? 10 : 0,
                         left: 10,
                         right: 10,
                         elevation: 0,
-                        backgroundColor: color.white,
+                        backgroundColor: !this.props.globalReducer.hide ? color.white : '',
                         borderRadius: 15,
-                        height: !this.state.hide ? 70 : 0,
+                        height: !this.props.globalReducer.hide ? 70 : 0,
                         ...styles.shadow
                     }
                 }}
@@ -111,7 +89,7 @@ class OwnerTabNavigator extends Component {
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.props.globalReducer.hide? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/user.png')}
                                 resizeMode = "contain"
@@ -137,7 +115,7 @@ class OwnerTabNavigator extends Component {
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.props.globalReducer.hide? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/car.png')}
                                 resizeMode = "contain"
@@ -160,8 +138,8 @@ class OwnerTabNavigator extends Component {
 
 
                 <Tab.Screen name='newCar' component={carRegistering} 
-                listeners = {{focus: () => BackHandler.addEventListener('hardwareBackPress', () => this.setState({hide: false}))
-                ,blur: () => BackHandler.removeEventListener('hardwareBackPress', () => this.setState({hide: false}))
+                listeners = {{focus: () => BackHandler.addEventListener('hardwareBackPress', () => this.props.setHide(false))
+                ,blur: () => BackHandler.removeEventListener('hardwareBackPress', () => this.props.setHide(false))
                 }}
                 options={({ route }) => ({
                     
@@ -187,7 +165,7 @@ class OwnerTabNavigator extends Component {
                 
                 options={{
                     tabBarIcon : ({focused}) => (
-                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
+                        <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.props.globalReducer.hide? 3 : 30}}>
                             <Image 
                                 source = {require('../../assets/images/profile_icons/location.png')}
                                 resizeMode = "contain"
@@ -212,7 +190,7 @@ class OwnerTabNavigator extends Component {
                     
                     options={{
                         tabBarIcon : ({focused}) => (
-                            <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.state.hide ? 3 : 30}}>
+                            <View style = {{alignItems: 'center', justifyContent: 'center', top: !this.props.globalReducer.hide? 3 : 30}}>
                                 <Image 
                                     source = {require('../../assets/images/profile_icons/settings.png')}
                                     resizeMode = "contain"
@@ -250,4 +228,14 @@ const styles = StyleSheet.create({
         elevation: 5
     }
 });
-export default OwnerTabNavigator;
+const mapStateToProps = state => {
+    return {...state}
+    }
+    
+    const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+        ...action,
+    }, dispatch);
+    }
+    
+    export default connect(mapStateToProps, mapDispatchToProps)( OwnerTabNavigator );

@@ -98,14 +98,15 @@ class imagesUploading extends Component {
 
       chooseImage = () => {
         ImagePicker.openPicker({
-          width: 500,
-          height: 500,
+          idth: 1200, // Add this 
+          height: 1500, // Add this
           cropping: true,
           cropperStatusBarColor: 'white',
           cropperToolbarColor: 'white',
           cropperActiveWidgetColor: 'white',
           cropperToolbarWidgetColor: color.primary,
-          freeStyleCropEnabled: true
+          freeStyleCropEnabled: true,
+          compressImageQuality: 1
         })
           .then(image => {
 
@@ -124,15 +125,16 @@ class imagesUploading extends Component {
     
       openCamera = () => {
         ImagePicker.openCamera({
-          width: 500,
-          height: 500,
+          width: 1200, // Add this 
+          height: 1500, // Add this
           cropping: true,
           cropperStatusBarColor: 'white', 
           cropperToolbarColor: 'white',
           cropperActiveWidgetColor: 'white',
           cropperToolbarWidgetColor: color.primary,
           freeStyleCropEnabled: true,
-          mediaType: 'photo'
+          mediaType: 'photo',
+          compressImageQuality: 1
         })
           .then(image => {
 
@@ -151,7 +153,6 @@ class imagesUploading extends Component {
     
       componentDidMount () {
         const {carRegisterReducer} = this.props
-        console.log('Images', carRegisterReducer)
         if(carRegisterReducer.inputData.images) {
           this.setState ({forme: carRegisterReducer.inputData.images})
         }

@@ -39,7 +39,6 @@ class barcodeScanning extends Component {
       }
       
       nextStep = () => {
-        console.log('okk');
         const { next } = this.props;
         // Go to next step
         next();
@@ -52,25 +51,27 @@ class barcodeScanning extends Component {
       }
 
       onBarCodeType = () => {
+        const {carRegisterReducer} = this.props
         this.setState({loading: true});
-        this.props.fetchCarData ({vindata: this.state.barcode});
+        this.props.fetchCarData ({vindata: this.state.barcode}, this.props);
         this.props.setData({VIN: this.state.barcode}, null)
         setTimeout(() => {
           this.setState({loading: false, show: true})
-          this.nextStep();
-        }, 2000);
+          
+        }, 3000);
       }
 
       onBarCodeRead = (scanResult) => {
+        const {carRegisterReducer} = this.props
 
         if (this.state.isBarcodeScannerEnabled) {
           this.setState({loading: true, isBarcodeScannerEnabled: false})
-          this.props.fetchCarData ({vindata: '5N1AT2MT0KC773740'});
+          this.props.fetchCarData ({vindata: '5N1AT2MT0KC773740'}, this.props);
           this.props.setData({VIN: this.state.barcode})
           setTimeout(() => {
             this.setState({loading: false, show: true})
-            this.nextStep();
-          }, 2000);
+            
+          }, 3000);
         }
       }
       
@@ -88,7 +89,6 @@ class barcodeScanning extends Component {
         if (this.camera) {
           const options = { quality: 0.5, base64: true };
           const data = await this.camera.takePictureAsync(options);
-          console.log(data.uri);
         }
       }
 

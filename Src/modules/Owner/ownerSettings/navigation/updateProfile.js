@@ -29,7 +29,8 @@ const UpdateProfile =  (props) => {
 
     const [lastname, setLastName] = useState(current_user.lastname);
     const [firstname, setFirstName] = useState(current_user.firstname);
-    const [phone, setPhone] = useState(null);
+    const [phone, setPhone] = useState(current_user.phone);
+    const [email, setEmail] = useState(current_user.email);
 
 
     const updateInformations = () => {
@@ -38,7 +39,10 @@ const UpdateProfile =  (props) => {
         lastname: lastname,
         firstname: firstname,
         phone: phone,
+        email: email,
       }
+
+      props.Update(data, props)
       
     };
 
@@ -52,12 +56,12 @@ const UpdateProfile =  (props) => {
 
     }
 
-    useEffect(() => {
-        cca2();
-        return () => {
-            cca2();
-        }
-    }, [])
+    // useEffect(() => {
+    //     cca2();
+    //     return () => {
+    //         cca2();
+    //     }
+    // }, [])
 
     const {registerOwnerReducer} = props;
     return (

@@ -33,6 +33,18 @@ const getCaracteristics = () => {
 const getGearbox = () => {
     return http.get("/gearBox/get");
 };
+
+const getCar = () => {
+    return http.get("/car/get");
+};
+
+const getFacture = () => {
+    return http.get("/facture/get");
+};
+
+const getImages = () => {
+    return http.get("/image/get");
+};
 const api = {
     getProfiles,
     getOwners,
@@ -40,7 +52,10 @@ const api = {
     getModels,
     getTypes,
     getCaracteristics,
-    getGearbox
+    getGearbox,
+    getCar,
+    getFacture,
+    getImages
 };
   
 export default api;

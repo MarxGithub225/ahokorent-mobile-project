@@ -12,9 +12,23 @@ import {
     SET_TYPES,
     SET_CARACTERISTICS,
     SET_GEARBOX,
+    SET_CARS,
+    SET_FACTURE,
+    SET_IMAGES,
+    SET_HIDE
 } from '../../common/actionsTypes';
 
 import api from './api';
+
+
+// SET HIDE
+export const setHide = (data) => (dispatch) =>{
+
+    dispatch ({
+        type: SET_HIDE,
+        payload: data
+    });
+};
 
 // SET IF I'TS FIRST TIME OPENNING THE APP OR NOT
 export const setInitialRoot = (data) => (dispatch) =>{
@@ -198,3 +212,57 @@ export const getGearbox = () => async (dispatch) =>{
     }
 };
 
+
+// GET CARS
+export const getCar = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getCar();
+        if(result)
+        {
+            dispatch ({
+                type: SET_CARS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting cars Error', error)
+    
+    }
+};
+
+// GET IMAGES
+export const getImages = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getImages();
+        if(result)
+        {
+            dispatch ({
+                type: SET_IMAGES,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting images Error', error)
+    
+    }
+};
+
+// GET FACTURES
+export const getFacture = () => async (dispatch) =>{
+    
+    try {
+        const result = await api.getFacture();
+        if(result)
+        {
+            dispatch ({
+                type: SET_FACTURE,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting cars Error', error)
+    
+    }
+};

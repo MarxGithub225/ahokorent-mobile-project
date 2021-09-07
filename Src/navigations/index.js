@@ -134,13 +134,16 @@ class AppNavContainer extends Component {
         this.loadSessionAppsState();
         this.loadSessionNumberVerified();
 
-        this.props.getProfiles()
-        this.props.getOwners()
-        this.props.getBrands()
-        this.props.getModels()
-        this.props.getCaracteristics()
-        this.props.getTypes()
-        this.props.getGearbox()
+        this.props.getProfiles();
+        this.props.getOwners();
+        this.props.getBrands();
+        this.props.getModels();
+        this.props.getCaracteristics();
+        this.props.getTypes();
+        this.props.getGearbox();
+        this.props.getCar();
+        this.props.getImages();
+        this.props.getFacture();
 
         setTimeout(() => {
             this.setState({isLoading: false})
@@ -163,6 +166,18 @@ class AppNavContainer extends Component {
         }, 1000);
     }
 
+
+    componentWillReceiveProps(nextProps, nextState) {
+        // if the current page changes, or the search term changes.
+
+        const {globalReducer} = nextProps;
+
+        if(!globalReducer.current_user && globalReducer.default_app === "owner_app") {
+            this.setState({init : LOGIN})
+         }
+
+    }
+      
     render (){
 
         if(this.state.isLoading) {

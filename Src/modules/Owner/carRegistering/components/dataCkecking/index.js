@@ -145,10 +145,9 @@ class dataCkecking extends Component {
           const exist = returnDatas.filter(rd => rd.label === n.label).length > 0 ? true : false;
           if(!exist) {
             let item = {}
-            let filter = carRegisterReducer.data.filter(dat => replaceFonction(dat.label) === n.label);
+            let filter = carRegisterReducer.data.length ? carRegisterReducer.data.filter(dat => replaceFonction(dat.label) === n.label) : [];
             
             const isExist = filter.length ? filter[0] : null;
-            console.log('LOGO2', isExist)
             if(isExist) { 
            
               item = {
@@ -205,9 +204,7 @@ class dataCkecking extends Component {
           inputData: {...this.state.inputData, [name]: value}
         });
 
-        setTimeout(() => {
-          console.log(this.state.inputData)
-        }, 3000);
+        
       }
 
       componentDidMount() {
@@ -219,7 +216,6 @@ class dataCkecking extends Component {
             this.setDataItems()
         }, 3000);
 
-        console.log('PROPS DATA 2', this.props.carRegisterReducer.inputData)
       }
     
     render() {
@@ -299,7 +295,7 @@ class dataCkecking extends Component {
                 </TouchableOpacity>  
                 
                 <View>
-                <Text style = {style.instruction}>Informations du véhicule 
+                <Text style = {style.instruction}>Caractéristiques du véhicule 
                 </Text>
                 
                 </View>
@@ -406,7 +402,7 @@ class dataCkecking extends Component {
                         <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {this.state.inputData['FuelTypePrimary'] ? style.buttonTextStyle : style.buttonTextStyleDefault}
+                            buttonTextStyle = {this.state.inputData['FuelTypePrimary'] === ('Diesel') || this.state.inputData['FuelTypePrimary'] === ('Super')? style.buttonTextStyle : style.buttonTextStyleDefault}
                             drow
                             
                             renderDropdownIcon={() => {
@@ -426,7 +422,7 @@ class dataCkecking extends Component {
                         <SelectDropdown
                             dropdownIconPosition = {'right'}
                             buttonStyle = {style.buttonStyle}
-                            buttonTextStyle = {this.state.inputData['Body'] ? style.buttonTextStyle : style.buttonTextStyleDefault}
+                            buttonTextStyle = {types.filter(t => t === this.state.inputData['Body']).length  ? style.buttonTextStyle : style.buttonTextStyleDefault}
                             drow
                             
                             renderDropdownIcon={() => {

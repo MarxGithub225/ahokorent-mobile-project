@@ -53,8 +53,8 @@ class caracteristicsAdd extends Component {
       }
     render() {
       const {carRegisterReducer} = this.props;
-      console.log(carRegisterReducer)
           const caracteristics = []
+
 
           this.props.globalReducer.caracteristics.forEach((element, i) => {
             caracteristics.push({
@@ -64,6 +64,25 @@ class caracteristicsAdd extends Component {
             })
           });
           
+          // if(carRegisterReducer.inputData.caracteristics.length) {
+
+          //   carRegisterReducer.inputData.caracteristics.split(",").forEach((element, i) => {
+          //     const carIt = {
+          //       id: i,
+          //       value: element,
+          //       isChecked: true,
+          //     }
+              
+
+          //     caracteristics.forEach((elt) => {
+
+          //       if(elt.value == carIt.value) {
+          //         elt.isChecked = carIt.isChecked;
+          //       }
+                
+          //     });
+          //   });
+          // }
         return (
             <View style = {style.container}>
                 <TouchableOpacity
@@ -73,7 +92,7 @@ class caracteristicsAdd extends Component {
                 </TouchableOpacity>  
                 
                 <View>
-                <Text style = {style.instruction}>Caractéristiques du véhicule 
+                <Text style = {style.instruction}>Options du véhicule 
                 </Text>
                 
                 </View>

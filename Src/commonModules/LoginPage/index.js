@@ -81,7 +81,10 @@ const Login =  (props) =>{
   const {loginReducer, globalReducer} = props;
   const profile = globalReducer.default_app === 'user_app' ? 'Partenaire' : globalReducer.default_app === 'owner_app' ? 'Propriétaire' : 'Driver'
   
-  
+  useEffect(() => {
+    setEmail(null);
+    setPassword(null)
+  }, [])
   return (
 
       <SafeAreaView style = {style.container}>
@@ -113,9 +116,9 @@ const Login =  (props) =>{
           <Input
             placeholder="E-mail ou Téléphone *"
             labelColor = {style.labelColor}
-            value={null}
+            value={email}
             onChangeText={(value) => {
-              setEmail(value.replace(' ', ''))
+              setEmail(value.split(' ').join(''))
             }}
 
             leftIcon={

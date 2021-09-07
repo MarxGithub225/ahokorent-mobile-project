@@ -11,6 +11,11 @@ export const SET_MODELS = "SET_MODELS";
 export const SET_TYPES = "SET_TYPES";
 export const SET_CARACTERISTICS = "SET_CARACTERISTICS";
 export const SET_GEARBOX = "SET_GEARBOX";
+export const SET_HIDE = "SET_HIDE";
+
+export const SET_CARS = "SET_CARS";
+export const SET_FACTURE = "SET_FACTURE";
+export const SET_IMAGES = "SET_IMAGES";
 
 export const LOGING_REQUEST = "LOGING_REQUEST";
 export const LOGING_SUCCESS = "LOGING_SUCCESS";

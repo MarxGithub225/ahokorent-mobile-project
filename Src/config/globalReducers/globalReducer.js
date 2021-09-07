@@ -12,9 +12,14 @@ import {
     SET_TYPES,
     SET_CARACTERISTICS,
     SET_GEARBOX,
+    SET_CARS,
+    SET_FACTURE,
+    SET_IMAGES,
+    SET_HIDE
 } from '../../common/actionsTypes';
 
 const initialState = {
+    hide: false,
     profiles: [],
     owners: [],
     brands: [],
@@ -31,7 +36,10 @@ const initialState = {
         owner: null,
         driver: null
     },
-    initialRoot: undefined
+    initialRoot: undefined,
+    cars : [],
+    factures : [],
+    images : []
 };
 
 const globalReducer = (data = initialState, action) => {
@@ -74,6 +82,17 @@ const globalReducer = (data = initialState, action) => {
         case SET_BRANDS:
             return {...data, brands: payload};
         
+        case SET_CARS:
+            return {...data, cars: payload};
+            
+        case SET_IMAGES:
+            return {...data, images: payload};
+            
+        case SET_FACTURE:
+            return {...data, factures: payload};
+        
+        case SET_HIDE:
+            return {...data, hide: payload};
         case SETINITIALROOT:
             return {...data, initialRoot: payload};
       default:

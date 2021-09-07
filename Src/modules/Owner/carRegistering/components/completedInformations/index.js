@@ -16,13 +16,15 @@ import { DatePickerModal } from 'react-native-paper-dates';
 import Textarea from 'react-native-textarea';
 import SnackBar from 'rn-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import ImgToBase64 from 'react-native-image-base64';
+import base64 from 'react-native-base64';
 import moment from 'moment';
 class completedInformations extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+          images : [],
           checked : 'noDelay',
           range : {
             startDate: Date | undefined,
@@ -53,10 +55,16 @@ class completedInformations extends Component {
       }
 
       onDismiss = () => {
+        if(!this.state.range.startDate) {
+          this.setState ({checked: 'noDelay'})
+        }
         this.setState({open: false})
       }
     
       onConfirm = ({ startDate, endDate }) => {
+        if(!this.state.range.startDate) {
+          this.setState ({checked: 'noDelay'})
+        }
         this.setState({open: false})
         this.setState({range: {startDate: startDate, endDate: endDate}})
       }
@@ -80,15 +88,31 @@ class completedInformations extends Component {
         )
       }
 
+      getDataUrl(img) { 
+        
+        ImgToBase64.getBase64String(img)
+          .then((base64String) => {
+            this.returnValue(base64String)
+          })
+          .catch(err => {console.log(err); return img});
+
+      }
+
+
+      returnValue = (string) => {
+        this.setState({images : [...this.state.images, string]})
+      }
       validate = () => {
         
         const {carRegisterReducer} = this.props;
-        const {current_user} = props.globalReducer;
+        const {current_user} = this.props.globalReducer;
+
+       
         const data = {
           ...carRegisterReducer.inputData,
           RentingStart : this.state.range.startDate ? new Date(this.state.range.startDate).getTime() : null,
           RentingEnd: this.state.range.endDate ? new Date(this.state.range.endDate).getTime() : null,
-          IsDriver: this.state.driver === 'no' ? false : true,
+          IsDriver: this.state.driver === 'no' ? 0 : 1,
           Date: new Date().getTime(),
           PrixProprio: this.state.inputData.CoutJour,
           CommissionAhoko: this.state.inputData.ComissionAhoko,
@@ -96,13 +120,15 @@ class completedInformations extends Component {
           Tva: this.state.inputData.Tva,
           Tdt: this.state.inputData.Tdt,
           Ardsi: this.state.inputData.Ardsi,
-          PrixAfficher: this.state.inputData.PrixAfficher,
+          PrixAfficher: Math.round(this.state.inputData.PrixAfficher),
           RevenuProprio: this.state.inputData.Gain,
-          IsPromo: false,
+          IsPromo: 0,
           PromoStart: null,
           PromoEnd: null,
           UpdateDate : new Date().getTime(),
-          Owner: current_user.reference
+          Owner: current_user.reference,
+          Description: this.state.inputData.Description,
+          images: [] = this.state.images
         }
 
         if(!this.state.inputData.CoutJour) {
@@ -110,10 +136,12 @@ class completedInformations extends Component {
           return;
         }
 
-        if(this.state.inputData.Description) {
+        if(!this.state.inputData.Description) {
           this._snackError('Veuillez ajouter une description du véhicule')
           return;
         }
+
+        
         this.props.Register(data, this.props)
       }
 
@@ -141,10 +169,24 @@ class completedInformations extends Component {
         }})
       }
 
-      
+      convertDate (date) {
+        return (new Date(date).getTime())
+      }
+
+      longToDate = (millisec) => {
+        moment.locale('fr');
+          return moment((new Date(millisec).toUTCString())).format('ll');
+      }
+    
+      componentDidMount() {
+        const {carRegisterReducer} = this.props;
+
+        carRegisterReducer.inputData.images.forEach(img => {
+          this.getDataUrl(img.value)
+        })
+      }
     render() {
       const {carRegisterReducer} = this.props
-        console.log('Dats', carRegisterReducer)
         return (
             <View style = {style.container}>
             <TouchableOpacity
@@ -195,6 +237,7 @@ class completedInformations extends Component {
               }
             />
             <Text style = {style.explain}>Votre revenu = 85% du coût journalier</Text>
+            <Text style = {style.explain2}>10% Commission Ahoko + 5% Taxe ARDSI <Text style = {{color: color.primary}}>(Voir la loi)</Text></Text>
         </View>}
         <View style = {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 25}}>
         <View style = {{justifyContent: 'center', alignItems: 'center'}}>
@@ -218,15 +261,15 @@ class completedInformations extends Component {
         <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Location périodique</Text>
         </View>
         
-        {/* {this.state.checked === 'delay' && 
-        <View>
-          <Text>Début : {this.state.range.startDate} </Text>
-          <Text>Fin : {this.state.range.endDate} </Text>
-        </View>
-        } */}
+       
         </View>
 
-
+        {this.state.range.startDate?
+        (<View style = {style.periodikZone}>
+          <Text style = {style.periodik}>Début : {this.longToDate(this.convertDate(this.state.range.startDate))} </Text>
+          <Text style = {style.periodik}>Fin : {this.state.range.endDate ? this.longToDate(this.convertDate(this.state.range.endDate)) : '----'}</Text>
+        </View>): (<></>)
+        } 
           <View style = {style.descriptionSide}>
           <Text style = {style.label}>Description du véhicule</Text>
           <Textarea

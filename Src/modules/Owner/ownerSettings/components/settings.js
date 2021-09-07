@@ -4,7 +4,7 @@ import { ListItem, Icon } from 'react-native-elements';
 import InfoText from './InfoText';
 import style from '../style';
 import color from '../../../../assets/themes/color';
-import { LOGIN, OWNEREDITPROFILE, WELCOME } from '../../../../common/rootNames';
+import { LOGIN, OWNEREDITPASS, OWNEREDITPROFILE, WELCOME } from '../../../../common/rootNames';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -15,12 +15,18 @@ import * as globalAction from '../../../../config/globalReducers/action'
 import AsyncStorage from '@react-native-community/async-storage';
 
 import SnackBar from 'rn-snackbar';
-
+import { NativeModules } from "react-native";
 const list = [
     {
         title: 'Modifier le profile',
-        icon: 'pencil-outline'
-      }
+        icon: 'pencil-outline',
+        navigate: OWNEREDITPROFILE
+    },
+    {
+      title: 'Réinitialiser le mot de passe',
+      icon: 'create-outline',
+      navigate: null
+  }
   ];
 
 const styles = StyleSheet.create({
@@ -54,19 +60,20 @@ const  SettingsScreen = (props) => {
     const {navigate} = useNavigation()
 
     const LogOut = async () => {
-        await AsyncStorage.removeItem('islogged');
-        props.setCurrentUser(null);
-
-        SnackBar.show('Vous êtes déconnecté', {
-            style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
-            backgroundColor: color.primary,
-            textColor: color.white,
-        })
-
-        navigate(WELCOME);
+        props.LogOut(props);
     }
 
 
+    const reinitialiser = () => {
+      const {current_user} = props.globalReducer;
+      current_user.email
+
+      const data = {
+        email : current_user.email
+      }
+
+      props.sendNewPass(data, props)
+    }
   return (
     <ScrollView style={styles.scroll}>
 
@@ -77,13 +84,13 @@ const  SettingsScreen = (props) => {
       {
           list.map((item, i) => (
           <ListItem key={i} bottomDivider
-          onPress = {() => {navigate(OWNEREDITPROFILE)}} 
+          onPress = {() => {item.navigate ? navigate(item.navigate) : reinitialiser()}} 
           >
               <Icon name={item.icon} type='ionicon' color = {color.grey} />
               <ListItem.Content>
               <ListItem.Title style = {styles.title}>{item.title}</ListItem.Title>
               </ListItem.Content>
-              <ListItem.Chevron />
+              {item.navigate && <ListItem.Chevron />}
           </ListItem>
           ))
       }

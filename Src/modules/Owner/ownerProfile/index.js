@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, SafeAreaView, Image, FlatList, Dimensions, Modal, TextInput} from 'react-native';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from './actions';
-
+import http from "../../../config/baseUrl";
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -17,52 +17,8 @@ import CardView from 'react-native-cardview';
 
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import moment from 'moment';
 const windowWidth = Dimensions.get('window').width;
-
-const DATA = [
-  {
-    user: 'Marx N`\'Guessan',
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 5,
-  },
-  {
-    user: 'Marx N`\'Guessan',
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 3,
-  },
-  {
-    user: 'Marx N`\'Guessan',
-    id: '58694a0f-3da1-471f-bd96-145571e29d72S',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 4,
-  },
-  {
-    user: 'Marx N`\'Guessan',
-    id: '58694a0f-3da1-471f-bd96-145571e29d72D',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 1,
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72R',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 5,
-  },
-  {
-    user: 'Marx N`\'Guessan',
-    id: '58694a0f-3da1-471f-bd96-145571e29d72O',
-    title: 'On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L\'avantage du Lorem Ipsum sur un texte générique comme Du texte. Du texte. Du texte. est qu\'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour Lorem Ipsum vous conduira vers de nombreux sites qui n\'en sont encore qu\'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d\'y rajouter de petits clins d\'oeil, voire des phrases embarassantes).',
-    date: '23 Août 2021, 08:00',
-    stars: 0,
-  }
-];
 
 
 const FiveStars = () => (
@@ -139,49 +95,27 @@ const renderCollapsar=()=>{
 }
 
 
-const imagesData = [{
-  // Simplest usage.
-  url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460',
-
-  // width: number
-  // height: number
-  // Optional, if you know the image size, you can set the optimization performance
-
-  // You can pass props to <Image />.
-  props: {
-      // headers: ...
-  }
-}, {
-  url: '',
-  props: {
-      // Or you can set source directory.
-      source: require('../../../assets/images/car.jpg')
-  }
-}]
 
 const ownerProfile = (props) => {
   
   const [visible, setVisible] = useState(false);
   const [commentModalvisible, setVisibleCommentModal] = useState(false);
-  const [images , setImages] = useState([]);
+  const [DATA , setDATA] = useState([]);
+  const [imagesData , setImages] = useState([]);
+
+  
   const {current_user} = props.globalReducer;
-
-
   const open = (image) => {
 
-      const images = [{
-            url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460',
-        
-            props: {
-                // headers: ...
-            }
-        }, {
-            url: '',
-            props: {
-                // Or you can set source directory.
-                source: '../../../assets/images/car.jpg'
-            }
-        }];
+      const images = [];
+
+        image.forEach(i => {
+          images.push(
+            {
+              url: `${http}${i.link}`
+          }
+          )
+        })
     setImages(images);
     setVisible(true);
   }
@@ -201,6 +135,15 @@ const ownerProfile = (props) => {
     setVisibleCommentModal(false)
   }
 
+
+  const convertDate = (date) => {
+    return (new Date(date).getTime())
+  }
+
+  const longToDate = (millisec) => {
+    moment.locale('fr');
+      return moment((new Date(Number(millisec)).toUTCString())).format('ll');
+  }
   const Item = ({data}) => (
     <View style={styles.MainContainer}>
       <CardView
@@ -224,26 +167,27 @@ const ownerProfile = (props) => {
   
         <View>
           <Text style = {styles.postUser}>
-            {data.user}
+            {`${data.user.lastname} ${data.user.firstname}`}
           </Text>
   
           <Text style = {styles.postDate}>
-            {data.date}
+            {longToDate(data.Date)}
           </Text>
         </View>
       </View>
   
       <View style = {styles.listMiddleSide}>
         <Text style = {styles.postTitle}>
-          Toyota corola 20219
+        {`${data.Make} ${data.Model} ${data.ModelYear}`}
         </Text>
         <View >
           <TouchableOpacity
           activeOpacity = {.5}
-          onPress = {() => {open (car)}}>
+          onPress = {() => {open (data.images)}}>
           
           <Image
-            source = {car}
+            source = {{uri: `${http}${data.images[0].link}`}
+            }
             resizeMode = 'cover'
             style = {{
               width: windowWidth - 30,
@@ -318,7 +262,6 @@ const ownerProfile = (props) => {
       </View>
     </CardView>
 
-    {visible && <Text><ImageViewer imageUrls={images}/></Text>}
   </View>
   );
   
@@ -329,6 +272,21 @@ const ownerProfile = (props) => {
       <Item data={item} />
     );
   }
+
+  useEffect(() => {
+    
+    const {current_user, cars, images, factures, profiles} = props.globalReducer;
+    let ownerCars = cars.filter(c => c.Owner === current_user.reference)
+
+    console.log( 'profiles',profiles)
+    ownerCars.forEach(oc => {
+      oc.images = images.filter(i => i.car == oc.Vin)
+      oc.facture = factures.filter(i => i.Car == oc.Vin)[0]
+      oc.user = profiles.filter(p => p.reference == oc.Owner)[0] 
+    });
+
+    setDATA (ownerCars.sort((a,b) => a.Date > b.Date ? -1 : 1))
+  }, [])
 
     return ( 
       <>
@@ -418,13 +376,14 @@ const ownerProfile = (props) => {
 
     <Modal 
     animationType="fade"
-    fullScreen = {true}
+    fullScreen = {false}
     visible={visible}
     transparent={true}>
     <ImageViewer 
     backgroundColor = 'rgba(0, 0, 0, 0.5)'
     enableImageZoom = {true}
-    imageUrls={imagesData}/>
+    imageUrls={imagesData}
+    />
 
     <TouchableOpacity
     style = {styles.close}
