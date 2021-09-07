@@ -6,6 +6,9 @@ import registerOwnerReducer from "../../modules/Owner/registerOwner/reducers";
 import passForgotReducer from "../../commonModules/PassForgot/reducers";
 import carRegisterReducer from "../../modules/Owner/carRegistering/reducers";
 import ownerSettingsReducer from "../../modules/Owner/ownerSettings/reducers";
+
+
+import carListReducer from "../../modules/Owner/carList/reducers";
 export default combineReducers({
     globalReducer,
     loginReducer,
@@ -13,5 +16,6 @@ export default combineReducers({
     smsconfirmationReducer,
     registerOwnerReducer,
     carRegisterReducer,
-    ownerSettingsReducer 
+    ownerSettingsReducer,
+    carListReducer 
 });

@@ -188,7 +188,10 @@ class completedInformations extends Component {
     render() {
       const {carRegisterReducer} = this.props
         return (
-            <View style = {style.container}>
+            <ScrollView style = {style.container}
+            showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}  
+            >
             <TouchableOpacity
             style = {style.backArrow}
             onPress={() => {this.goBack()}}>
@@ -293,7 +296,7 @@ class completedInformations extends Component {
             status={ this.state.driver === 'no' ? 'checked' : 'unchecked' }
             onPress={() => this.setState({driver: 'no'})}
             />
-            <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Sans chauffer</Text>
+            <Text style = {{fontFamily : 'CaviarDreamsBold',}}>Sans chauffeur</Text>
           </View>
           <View style = {{justifyContent: 'center', alignItems: 'center'}}>
             <RadioButton
@@ -396,7 +399,7 @@ class completedInformations extends Component {
             visible={carRegisterReducer.loading}
             textContent={'Patientez...'}
             textStyle={{ color: '#fff', fontFamily : 'CaviarDreams' }} />     
-            </View>
+            </ScrollView>
 
 
 

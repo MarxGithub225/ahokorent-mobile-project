@@ -13,6 +13,7 @@ import color from '../../assets/themes/color';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from '../../config/globalReducers/action';
+import CarListScreen from '../../modules/Owner/carList';
 class OwnerTabNavigator extends Component { 
     constructor (props) {
         super(props);
@@ -111,7 +112,7 @@ class OwnerTabNavigator extends Component {
                 />
 
                 
-                <Tab.Screen name={CARREGISTERING} component={carRegistering} 
+                <Tab.Screen name={'CarListScreen'} component={CarListScreen} 
                 
                 options={{
                     tabBarIcon : ({focused}) => (

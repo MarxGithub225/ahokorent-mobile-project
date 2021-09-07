@@ -167,16 +167,16 @@ class AppNavContainer extends Component {
     }
 
 
-    componentWillReceiveProps(nextProps, nextState) {
-        // if the current page changes, or the search term changes.
+    // UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+    //     // if the current page changes, or the search term changes.
 
-        const {globalReducer} = nextProps;
+    //     const {globalReducer} = nextProps;
 
-        if(!globalReducer.current_user && globalReducer.default_app === "owner_app") {
-            this.setState({init : LOGIN})
-         }
+    //     if(!globalReducer.current_user && globalReducer.default_app === "owner_app") {
+    //         this.setState({init : LOGIN})
+    //     }
 
-    }
+    // }
       
     render (){
 

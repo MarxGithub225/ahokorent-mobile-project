@@ -242,7 +242,7 @@ class imagesUploading extends Component {
                         {...this.props}
                         source={require('../../../../../assets/images/icons/photo-camera.png')}
                         />
-                            <Text style = {style.itemText}>Caméa</Text>
+                            <Text style = {style.itemText}>Caméra</Text>
                         </TouchableOpacity>
                         </SafeAreaView>
                     </Modal>
