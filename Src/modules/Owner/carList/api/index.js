@@ -6,18 +6,14 @@ const update = (data) => {
 };
 
 
-const getProfiles = () => {
-    return http.get("/profile/get");
+const updateImage = (data) => {
+    return http.put("/image/update", data);
 };
 
-const passforgot = (data) => {
-    return http.put("/profile/updatePass", data);
-};
 
 const api = {
     update,
-    getProfiles,
-    passforgot
+    updateImage
 };
   
 export default api;

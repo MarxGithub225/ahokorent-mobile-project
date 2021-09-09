@@ -147,7 +147,7 @@ class AppNavContainer extends Component {
 
         setTimeout(() => {
             this.setState({isLoading: false})
-        }, 2500);
+        }, 4000);
 
         setTimeout(() => {
             const {globalReducer} = this.props;
@@ -167,16 +167,18 @@ class AppNavContainer extends Component {
     }
 
 
-    // UNSAFE_componentWillReceiveProps(nextProps, nextState) {
-    //     // if the current page changes, or the search term changes.
+    UNSAFE_componentWillReceiveProps(nextProps, nextState) {
+        // if the current page changes, or the search term changes.
 
-    //     const {globalReducer} = nextProps;
+        const {globalReducer} = nextProps;
 
-    //     if(!globalReducer.current_user && globalReducer.default_app === "owner_app") {
-    //         this.setState({init : LOGIN})
-    //     }
+        if(!globalReducer.current_user && globalReducer.default_app === "owner_app") {
+            this.setState({init : LOGIN})
+        }
 
-    // }
+        console.log(nextState)
+
+    }
       
     render (){
 

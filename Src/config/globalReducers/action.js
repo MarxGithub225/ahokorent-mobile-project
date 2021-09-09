@@ -251,7 +251,7 @@ export const getImages = () => async (dispatch) =>{
 
 // GET FACTURES
 export const getFacture = () => async (dispatch) =>{
-    
+   
     try {
         const result = await api.getFacture();
         if(result)

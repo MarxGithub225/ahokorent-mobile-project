@@ -96,7 +96,7 @@ class completedInformations extends Component {
           })
           .catch(err => {console.log(err); return img});
 
-      }
+      } 
 
 
       returnValue = (string) => {

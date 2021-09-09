@@ -5,6 +5,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'r
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as action from '../actions';
+import * as globalAction from '../../../../config/globalReducers/action'
 
 import Input from '../../../../common/components/input';
 
@@ -19,12 +20,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import Modal from 'react-native-modal';
-import face from '../../../../assets/images/carIcons/face.png';
-import arriere from '../../../../assets/images/carIcons/arriere.png';
-import boot from '../../../../assets/images/carIcons/boot2.png';
-import interriorBack from '../../../../assets/images/carIcons/interriorBack.png';
-import interriorFront from '../../../../assets/images/carIcons/interriorFront.png';
-import profile from '../../../../assets/images/carIcons/profile.png'; 
 import style from './style';
 
 import http from "../../../..//config/baseUrl";
@@ -37,27 +32,20 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const init =
  [
-    {label: 'Face' , value: null, illustration: face},
-    {label: 'Arrière' , value: null, illustration: arriere},
-    {label: 'Profile' , value: null, illustration: profile},
-    {label: 'Intérieur avant' , value: null, illustration: interriorFront},
-    {label: 'Intérieur arrière' , value: null, illustration: interriorBack},
-    {label: 'Coffre', value: null, illustration: boot}
+    {label: 'Face' , value: null},
+    {label: 'Arrière' , value: null},
+    {label: 'Profile' , value: null},
+    {label: 'Intérieur avant' , value: null},
+    {label: 'Intérieur arrière' , value: null},
+    {label: 'Coffre', value: null}
 ]
 const UpdateCar =  (props) => {
 
     const {selected} = props.carListReducer;
     const {current_user} = props.globalReducer;
     
-    console.log(selected)
-    init.forEach((it, i) => {
-      selected.images.forEach((img, index) => {
-        if(i === index) {
-          it.illustration = http + img.link
-        }
-      })
-    })
-    const [forme, setForme] = useState(init)
+    
+    const [forme, setForme] = useState([])
     const [images, setImages] = useState([])
     const [visible, setVisible] = useState(false)
     const [selectedForm, setSelectForm] = useState(null)
@@ -70,7 +58,7 @@ const UpdateCar =  (props) => {
     });
     const [openM, setOpen] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [driver, setDriver] = useState(selected.IsDriver === 0 ? 'no' : 'yes');
+    const [driver, setDriver] = useState(selected.IsDriver === '0' ? 'no' : 'yes');
     const [inputData, setInputData] = useState({
       CoutJour: selected.facture.PrixProprio,
       Gain: selected.facture.RevenuProprio,
@@ -109,19 +97,40 @@ const UpdateCar =  (props) => {
       setModalVisible(false)
     }
 
-    const getDataUrl = (img) => { 
+    const getDataUrl = (img, id) => { 
       
       ImgToBase64.getBase64String(img)
         .then((base64String) => {
-          returnValue(base64String)
+          returnValue(base64String, id)
         })
         .catch(err => {console.log(err); return img});
 
     }
 
 
-    const returnValue = (string) => {
-      setImages([...images, string])
+    const returnValue = (string, id) => {
+      if(images.length === 0) {
+        images.push({
+          value : `${string}` ,
+          id : id
+        })
+        const state = images
+        setImages(state) ;
+        return;
+      }
+
+      for (let v of images) {
+        if(v.id === id) {
+          v.value = `${string}`
+        }else {
+          images.push({
+            value : `${string}` ,
+            id : id
+          })
+        }
+      }
+      const state = images
+      setImages(state) ;
     }
 
 
@@ -157,16 +166,22 @@ const UpdateCar =  (props) => {
         return moment((new Date(millisec).toUTCString())).format('ll');
     }
 
-    const updateInformations = () => {
+    const updateImages = () => {
 
-      const data = {
-        lastname: lastname,
-        firstname: firstname,
-        phone: phone,
-        email: email,
-      }
+      
+      const data = [];
 
-      props.Update(data, props)
+      forme.forEach(f => {
+        images.forEach(i => {
+          if(i.id === f.id) {
+            data.push({value: i.value, modified : 1, id : f.id})
+          }else {
+            data.push({value: f.value.split(http).join(""), modified : 0, id : f.id})
+          }
+        })
+      })
+
+      props.updateImage({images: data}, props)
       
     };
 
@@ -190,12 +205,13 @@ const UpdateCar =  (props) => {
 
         for (let v of forme) {
           if(v.label === selectedForm) {
-            v.value = image.path
+            v.value = image.path 
+
+            getDataUrl(image.path, v.id)
           }
         }
-        const state = forme;
-        
-        setForme(state)
+        const state = forme
+         setForme(state);
       })
       .finally(close);
   };
@@ -217,15 +233,17 @@ const UpdateCar =  (props) => {
 
         for (let v of forme) {
           if(v.label === selectedForm) {
-            v.value = image.path
+            v.value = image.path 
+            getDataUrl(image.path, v.id)
           }
         }
-        const state = forme;
-        csetForme(state)
+        const state = forme
+         setForme(state);
       })
       .finally(close);
   };
 
+  
   useEffect(() => {
     calculate(selected.facture.PrixProprio)
     setInputData({
@@ -241,7 +259,20 @@ const UpdateCar =  (props) => {
       BeneficeAhoko: selected.facture.BeneficeAhoko,
     })
   }, [])
-    const {registerOwnerReducer} = props;
+
+  useEffect(() => {
+    init.forEach((it, i) => {
+      selected.images.forEach((img, index) => {
+        if(i === index) {
+          it.value = http + img.link,
+          it.id = img.id 
+        }
+      })
+    })
+
+    setForme(init)
+  }, [forme])
+    const {carListReducer} = props;
     return (
         <ScrollView style={style.container}
         showsVerticalScrollIndicator={false}
@@ -269,9 +300,9 @@ const UpdateCar =  (props) => {
                     onPress = {() => {open(form.label)}}
                     >
                         <Image
-                        resizeMode = "contain"
+                        resizeMode = "contain" 
                         style={[style.uploadImage, {borderRadius: 15}]}
-                        source={form.value ? { uri: form.value}: {uri: `${form.illustration}`}}
+                        source={{ uri: form.value}}
                         />
 
                     <Text style = {{color: color.danger, fontFamily: 'CaviarDreamsBold', fontSize: 10}}>{form.label}</Text>
@@ -287,7 +318,7 @@ const UpdateCar =  (props) => {
 
             <View style = {[style.FlatButton, {marginBottom: 100}]}>
               <TouchableOpacity
-              onPress = {() => {this.validate()}}
+              onPress = {() => {updateImages()}}
               >
               <CustomButton
             
@@ -415,7 +446,10 @@ const UpdateCar =  (props) => {
           </TouchableOpacity>
         </View>
 
-        
+        <Spinner
+            visible={carListReducer.loading}
+            textContent={'Patientez...'}
+            textStyle={{ color: '#fff', fontFamily : 'CaviarDreams' }} />
       </View>
 
 
@@ -523,6 +557,7 @@ return {...state}
 
 const mapDispatchToProps = (dispatch) => {
 return bindActionCreators({
+  ...globalAction,
     ...action,
 }, dispatch);
 }
