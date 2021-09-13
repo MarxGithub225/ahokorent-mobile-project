@@ -18,6 +18,7 @@ import CardView from 'react-native-cardview';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
+import { ActivityIndicator } from 'react-native-paper';
 const windowWidth = Dimensions.get('window').width;
 
 
@@ -131,8 +132,8 @@ const ownerProfile = (props) => {
   }
 
 
-  const onClose = () => {
-    setVisibleCommentModal(false)
+  const onClose = () => { 
+    setVisibleCommentModal(false)  
   }
 
 
@@ -189,6 +190,7 @@ const ownerProfile = (props) => {
             source = {{uri: `${http}${data.images[0].link}`}
             }
             resizeMode = 'cover'
+            onLoad = {() => (<ActivityIndicator size = {20} color = {color.primary}/>)}
             style = {{
               width: windowWidth - 30,
               height: 190
@@ -269,24 +271,25 @@ const ownerProfile = (props) => {
    
     return (
      
-      <Item data={item} />
+      <Item data={item} key = {item.id} />
     );
   }
 
-  useEffect(() => {
+  useEffect(() => { 
     
-   console.log(props.globalReducer);
     const {current_user, cars, images, factures, profiles} = props.globalReducer;
     let ownerCars = cars.filter(c => c.Owner === current_user.reference)
 
-    console.log( 'profiles', profiles)
+    console.log( 'profiles', cars) 
     ownerCars.forEach(oc => {
       oc.images = images.filter(i => i.car == oc.Vin)
       oc.facture = factures.filter(i => i.Car == oc.Vin)[0]
       oc.user = profiles.filter(p => p.reference == oc.Owner)[0] 
     });
 
+
     setDATA (ownerCars.sort((a,b) => a.Date > b.Date ? -1 : 1))
+    
   }, [])
 
     return ( 

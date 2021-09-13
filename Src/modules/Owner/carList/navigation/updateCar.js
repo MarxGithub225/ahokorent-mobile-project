@@ -181,7 +181,35 @@ const UpdateCar =  (props) => {
         })
       })
 
+      console.log(data);
+      return;
+
       props.updateImage({images: data}, props)
+      
+    };
+
+    const update = () => {
+
+      
+      const data = {
+        ...selected.facture,
+        RentingStart : range.startDate ? new Date(range.startDate).getTime() : null,
+        RentingEnd: range.endDate ? new Date(range.endDate).getTime() : null,
+        IsDriver: driver === 'no' ? 0 : 1,
+        PrixProprio: inputData.CoutJour,
+        CommissionAhoko: inputData.ComissionAhoko,
+        BeneficeAhoko: inputData.BeneficeAhoko,
+        Tva: inputData.Tva,
+        Tdt: inputData.Tdt,
+        Ardsi: inputData.Ardsi,
+        PrixAfficher: Math.round(inputData.PrixAfficher),
+        RevenuProprio: inputData.Gain,
+        UpdateDate : new Date().getTime(),
+        Description: inputData.Description,
+      }
+
+      return;
+      props.Update(data, props)
       
     };
 
@@ -403,7 +431,7 @@ const UpdateCar =  (props) => {
             containerStyle={style.textareaContainer}
             style={style.textarea}
             defaultValue = {inputData.Description}
-            onChangeText={value => {setInputData({...inputData , Description: value})}}
+            onChangeText={value => {console.log(value);setInputData({...inputData , Description: value})}}
             maxLength={255}
             placeholder={'Description ici...'}
             placeholderTextColor={'#c7c7c7'}
@@ -436,7 +464,7 @@ const UpdateCar =  (props) => {
         </View>
         <View style = {style.FlatButton}>
           <TouchableOpacity
-          onPress = {() => {this.validate()}}
+          onPress = {() => {update()}}
           >
           <CustomButton
          

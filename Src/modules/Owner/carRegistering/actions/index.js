@@ -115,7 +115,6 @@ export const Register = (data, props) => async (dispatch) =>{
         next();
       }
     }else {
-      console.log(res.data)
       dispatch ({
             type: CAR_REGISTER_ERROR
       })

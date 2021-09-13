@@ -2,7 +2,7 @@ import http from "../../../../config/httpCommon";
 
 
 const update = (data) => {
-    return http.put("/profile/update", data);
+    return http.put("/facture/update", data);
 };
 
 

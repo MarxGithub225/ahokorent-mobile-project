@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
       const {current_user, cars, images, factures, profiles} = props.globalReducer;
       let ownerCars = cars.filter(c => c.Owner === current_user.reference)
   
-      console.log( 'profiles',profiles)
       ownerCars.forEach(oc => {
         oc.images = images.filter(i => i.car == oc.Vin)
         oc.facture = factures.filter(i => i.Car == oc.Vin)[0]

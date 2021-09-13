@@ -41,43 +41,25 @@ export const selectData = (data) => async (dispatch) =>{
 
 export const Update = (data, props) => async (dispatch) =>{
 
+  
   dispatch ({
         type: UPDATECAR_REQUEST
   })
   try {
     const res = await api.update(data);
 
-    dispatch ({
-          type: UPDATECAR_SUCCESS
-    })
-
-    
     if(res.data.status)
     {
       _snackSuccess ('Modification réussie');
+        
+      dispatch ({
+            type: UPDATECAR_SUCCESS 
+      })
 
-        const result = await api.getProfiles();
-        if(result)
-        {
-          
-          const user = result.data.data.filter(u => u.email === data.email)[0]
-          
-          await AsyncStorage.setItem('islogged', JSON.stringify(user));
-
-            dispatch ({
-                type: SET_CURRENT_USER,
-                payload: user
-            })
-            dispatch ({
-                type: SET_PROFILES,
-                payload: result.data.data
-            });
-
-            props.navigation.navigate(OWNERSETTINGSSCREEN)
-        }
-
+      props.getCar();
+      props.getImages();
+      props.getFacture();
     }else {
-     
     _snackError ('Une erreur est survénue, veuillez réessayer');
     }
   } catch (error) {
@@ -110,7 +92,6 @@ export const updateImage = (data, props) => async (dispatch) =>{
       props.getImages();
       props.getFacture();
     }else {
-     console.log(res.data)
     _snackError ('Une erreur est survénue, veuillez réessayer');
     }
   } catch (error) {
