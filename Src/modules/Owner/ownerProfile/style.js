@@ -285,12 +285,22 @@ export default StyleSheet.create({
 
     centeredView: {
       flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
       marginTop: 30,
       backgroundColor:color.white,
       borderTopStartRadius: 15,
       borderTopEndRadius: 15,
+    },
+    centeredView2: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor:color.white,
+      borderTopStartRadius: 15,
+      borderTopEndRadius: 15,
+      width : "100%",
+      paddingHorizontal : 25
     },
     modalView: {
       margin: 20,
@@ -330,5 +340,25 @@ export default StyleSheet.create({
       position: 'absolute',
       bottom: 24,
       right: 30
+    },
+    commentText : {
+      paddingHorizontal : 15,
+      paddingVertical : 5,
+      backgroundColor : '#F5F5F5',
+      fontFamily : 'CaviarDreams',
+    },
+    commentUser : {
+      fontFamily : 'CaviarDreamsBold',
+    },
+    commentItem : {
+      marginBottom : 2
+    },
+    commentSide : {
+      marginBottom : 15
+    },
+    commentDate : {
+      marginLeft: 15,
+      fontFamily : 'CaviarDreams',
+      fontSize: 12
     }
 });

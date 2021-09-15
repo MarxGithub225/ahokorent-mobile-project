@@ -10,7 +10,6 @@ const setOwner = (data) => {
     return http.post("/owner/register", data);
 };
 
-
 const api = {
     register,
     setOwner

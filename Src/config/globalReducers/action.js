@@ -15,11 +15,45 @@ import {
     SET_CARS,
     SET_FACTURE,
     SET_IMAGES,
-    SET_HIDE
+    SET_HIDE,
+    SETCOMMENT_REQUEST,
+    SETCOMMENT_ERROR,
+    SETCOMMENT_SUCCESS,
+    SETRATING_REQUEST,
+    SETRATING_ERROR,
+    SETRATING_SUCCESS,
+    SETSHARING_REQUEST,
+    SETSHARING_ERROR,
+    SETSHARING_SUCCESS,
+    SET_COMMENTS,
+    SET_RATINGS,
+    SET_SHARINGS,
 } from '../../common/actionsTypes';
 
 import api from './api';
+import SnackBar from 'rn-snackbar';
+import color from '../../assets/themes/color';
 
+const _snackError = (text) => {
+    return (
+        SnackBar.show(text, {
+        style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+        backgroundColor: color.danger,
+        textColor: color.white,
+        })
+    )
+}
+
+
+const _snackSuccess = (text) => {
+    return (
+        SnackBar.show(text, {
+        style: { marginBottom: 10,marginRight: 10, marginLeft: 10, borderRadius: 5, textAlign: 'center' },
+        backgroundColor: color.primary,
+        textColor: color.white,
+        })
+    )
+}
 
 // SET HIDE
 export const setHide = (data) => (dispatch) =>{
@@ -264,5 +298,181 @@ export const getFacture = () => async (dispatch) =>{
     } catch (error) {
     console.log('Getting cars Error', error)
     
+    }
+};
+
+// GET COMMENTS
+export const getComments = () => async (dispatch) =>{
+   
+    try {
+        const result = await api.getComments();
+        if(result)
+        {
+            dispatch ({
+                type: SET_COMMENTS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting comments Error', error)
+    
+    }
+};
+
+// GET FACTURES
+export const getRatings = () => async (dispatch) =>{
+   
+    try {
+        const result = await api.getRatings();
+        if(result)
+        {
+            dispatch ({
+                type: SET_RATINGS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting ratings Error', error)
+    
+    }
+};
+
+// GET FACTURES
+export const getSharings = () => async (dispatch) =>{
+   
+    try {
+        const result = await api.getSharings();
+        if(result)
+        {
+            dispatch ({
+                type: SET_SHARINGS,
+                payload: result.data.data
+            });
+        }
+    } catch (error) {
+    console.log('Getting sharings Error', error)
+    
+    }
+};
+
+
+export const setComment = (data) => async (dispatch) =>{
+
+    console.log(data)
+    dispatch ({
+          type: SETCOMMENT_REQUEST
+    })
+    try {
+      const res = await api.setComment(data);
+  
+      console.log(res.data)
+      if(res.data.status){
+        const result = await api.getComments();
+        if(result)
+        {
+            dispatch ({
+                type: SET_COMMENTS,
+                payload: result.data.data
+            });
+        }
+
+        dispatch ({
+            type: SETCOMMENT_SUCCESS
+        })
+        _snackSuccess ('Commentaire enregistré');
+
+        
+    }else {
+        dispatch ({
+            type: SETCOMMENT_ERROR
+        })
+        _snackError ('Une erreur est survénue, veuillez réessayer.');
+       
+    }
+  
+    } catch (error) {
+      dispatch ({
+            type: SETCOMMENT_ERROR
+      })
+      _snackError ('Une erreur est survénue, veuillez réessayer.');
+    }
+};
+
+export const setRating = (data) => async (dispatch) =>{
+
+    dispatch ({
+          type: SETRATING_REQUEST
+    })
+    try {
+      const res = await api.setRating(data);
+  
+      if(res.data.status){
+        
+        const result = await api.getRatings();
+        if(result)
+        {
+            dispatch ({
+                type: SET_RATINGS,
+                payload: result.data.data
+            });
+        }
+
+        dispatch ({
+            type: SETRATING_SUCCESS
+        })
+        _snackSuccess ('Note enregistrée');
+    }else {
+        dispatch ({
+            type: SETRATING_ERROR
+        })
+        _snackError ('Une erreur est survénue, veuillez réessayer.');
+       
+    }
+  
+    } catch (error) {
+      dispatch ({
+            type: SETRATING_ERROR
+      })
+      _snackError ('Une erreur est survénue, veuillez réessayer.');
+    }
+};
+
+export const setSharing = (data) => async (dispatch) =>{
+
+    dispatch ({
+          type: SETSHARING_REQUEST
+    })
+    try {
+      const res = await api.setSharing(data);
+  
+      if(res.data.status){
+        
+        const result = await api.getSharings();
+        if(result)
+        {
+            dispatch ({
+                type: SET_SHARINGS,
+                payload: result.data.data
+            });
+        }
+
+        dispatch ({
+            type: SETSHARING_SUCCESS
+        })
+
+
+    }else {
+        dispatch ({
+            type: SETSHARING_ERROR
+        })
+        _snackError ('Une erreur est survénue, veuillez réessayer.');
+       
+    }
+  
+    } catch (error) {
+      dispatch ({
+            type: SETSHARING_ERROR
+      })
+      _snackError ('Une erreur est survénue, veuillez réessayer.');
     }
 };

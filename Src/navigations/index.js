@@ -144,6 +144,10 @@ class AppNavContainer extends Component {
         this.props.getCar();
         this.props.getImages();
         this.props.getFacture();
+        this.props.getComments();
+        this.props.getRatings();
+        this.props.getSharings();
+
 
         setTimeout(() => {
             this.setState({isLoading: false})

@@ -15,7 +15,19 @@ import {
     SET_CARS,
     SET_FACTURE,
     SET_IMAGES,
-    SET_HIDE
+    SET_HIDE,
+    SETCOMMENT_REQUEST,
+    SETCOMMENT_ERROR,
+    SETCOMMENT_SUCCESS,
+    SETRATING_REQUEST,
+    SETRATING_ERROR,
+    SETRATING_SUCCESS,
+   SETSHARING_REQUEST,
+   SETSHARING_ERROR,
+   SETSHARING_SUCCESS,
+   SET_COMMENTS,
+    SET_RATINGS,
+    SET_SHARINGS,
 } from '../../common/actionsTypes';
 
 const initialState = {
@@ -39,7 +51,13 @@ const initialState = {
     initialRoot: undefined,
     cars : [],
     factures : [],
-    images : []
+    images : [],
+    comments : [],
+    ratings : [],
+    sharings : [],
+    loading : false,
+    error: false,
+    success: false,
 };
 
 const globalReducer = (data = initialState, action) => {
@@ -90,11 +108,49 @@ const globalReducer = (data = initialState, action) => {
             
         case SET_FACTURE:
             return {...data, factures: payload};
+
+            case SET_COMMENTS:
+            return {...data, comments: payload};
+
+            case SET_RATINGS:
+            return {...data, ratings : payload};
+
+            case SET_SHARINGS:
+            return {...data, sharings: payload};
         
         case SET_HIDE:
             return {...data, hide: payload};
+
         case SETINITIALROOT:
             return {...data, initialRoot: payload};
+
+        case SETCOMMENT_REQUEST:
+            return {...data, loading: true};
+
+        case SETCOMMENT_SUCCESS:
+            return {...data, loading: false, success: true};
+
+        case SETCOMMENT_ERROR:
+            return {...data, loading: false, error: true};
+
+        case SETRATING_REQUEST:
+            return {...data, loading: true};
+
+        case SETRATING_SUCCESS:
+            return {...data, loading: true, success: true};
+
+        case SETRATING_ERROR:
+            return {...data, loading: true, error: true};
+
+        case SETSHARING_REQUEST:
+            return {...data, loading: true};
+
+        case SETSHARING_SUCCESS:
+            return {...data, loading: true, success: true};
+
+        case SETSHARING_ERROR:
+            return {...data, loading: true, error: true};
+            
       default:
         return data;
     }

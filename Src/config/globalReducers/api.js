@@ -45,6 +45,31 @@ const getFacture = () => {
 const getImages = () => {
     return http.get("/image/get");
 };
+
+const getComments = () => {
+    return http.get("/comment/get");
+};
+
+const getRatings = () => {
+    return http.get("/rating/get");
+};
+
+const getSharings = () => {
+    return http.get("/sharing/get");
+};
+
+const setComment = (data) => {
+    return http.post("/comment/register", data);
+};
+
+const setSharing= (data) => {
+    return http.post("/sharing/register", data);
+};
+
+const setRating = (data) => {
+    return http.post("/rating/register", data);
+};
+
 const api = {
     getProfiles,
     getOwners,
@@ -55,7 +80,13 @@ const api = {
     getGearbox,
     getCar,
     getFacture,
-    getImages
+    getImages,
+    setComment,
+    setSharing,
+    setRating,
+    getComments,
+    getRatings,
+    getSharings,
 };
   
 export default api;
