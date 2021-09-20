@@ -15,7 +15,7 @@ import style from './style';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import color from '../../assets/themes/color';
  
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/logos/logo.png';
 import SnackBar from 'rn-snackbar';
 import Spinner from 'react-native-loading-spinner-overlay';
 import validator from 'validator';

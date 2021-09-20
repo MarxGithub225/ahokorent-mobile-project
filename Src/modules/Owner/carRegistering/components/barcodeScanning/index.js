@@ -10,8 +10,8 @@ import BarcodeMask from 'react-native-barcode-mask'
 import Spinner from 'react-native-loading-spinner-overlay';
 import CustomButton from '../../../../../common/components/customButton';
 
-import BarIcon from '../../../../../assets/images/barreCode.png'
-import TypingIcon from '../../../../../assets/images/typing.png'
+import BarIcon from '../../../../../assets/images/carIcons/barreCode.png'
+import TypingIcon from '../../../../../assets/images/carIcons/typing.png'
 import Maticon from 'react-native-vector-icons/MaterialIcons';
 import color from '../../../../../assets/themes/color';
 

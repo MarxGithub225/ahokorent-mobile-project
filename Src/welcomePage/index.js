@@ -5,9 +5,9 @@ import { StatusBar, Text, View, ScrollView, SafeAreaView, ImageBackground, Touch
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import driver from '../assets/images/welcome_car_driver.jpg';
-import owner from '../assets/images/welcone_car_owner.jpg';
-import renting from '../assets/images/welcone_rent_car.jpg';
+import driver from '../assets/images/welcome/driver.jpg';
+import owner from '../assets/images/welcome/owner.jpg';
+import renting from '../assets/images/welcome/renter.jpg';
 
 import {LOGIN, OWNERINTRODUCTION} from '../common/rootNames';
 import * as action from '../config/globalReducers/action';

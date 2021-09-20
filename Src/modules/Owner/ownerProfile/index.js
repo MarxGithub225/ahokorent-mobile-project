@@ -13,7 +13,7 @@ import color from '../../../assets/themes/color';
 
 import styles from './style';
 import TextTruncate from 'react-native-text-truncate';
-import car from '../../../assets/images/car.jpg';
+import car from '../../../assets/images/carIcons/car.jpg';
 import CardView from 'react-native-cardview';
 
 import ImageViewer from 'react-native-image-zoom-viewer';

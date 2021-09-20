@@ -12,7 +12,7 @@ const App = () =>{
 
   useEffect (() => {
     SplashScreen.hide();
-  }, [])
+  }, []);
   
   return (
       <Provider store={Store}>

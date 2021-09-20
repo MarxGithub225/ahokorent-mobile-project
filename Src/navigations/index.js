@@ -190,7 +190,7 @@ class AppNavContainer extends Component {
             return (
               <View style = {{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: color.white, flexDirection: 'column'}}>
                 <Image
-                source = {require('../assets/images/ico2.png')}
+                source = {require('../assets/images/logos/ico2.png')}
                 resizeMode = "contain"
                 style = {{
                     width: 190,
