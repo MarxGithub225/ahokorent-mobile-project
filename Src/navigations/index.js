@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import style from './style';
 import AuthNavigator from './authNavigator';
+import DriverTabNavigator from './driverTabNavigator'
 import { navigationRef } from './rootNavigator';
 import color from '../assets/themes/color';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -32,7 +33,7 @@ class AppNavContainer extends Component {
     loadFirstimeState = async () => {
 
         try {
-            const value = await AsyncStorage.getItem('firstTimeOpen');
+            const value = await AsyncStorage.removeItem('firstTimeOpen');
 
             if(value !== null) {
                 this.props.setFirsTime(false);
@@ -51,7 +52,7 @@ class AppNavContainer extends Component {
     loadLoggedState = async () => {
 
         try {
-            const value = await AsyncStorage.getItem('islogged');
+            const value = await AsyncStorage.removeItem('islogged');
 
             if(value !== null) {
                this.props.setCurrentUser(JSON.parse(value));
@@ -69,7 +70,7 @@ class AppNavContainer extends Component {
     loadDefaultAppState = async () => {
 
         try {
-            const value = await AsyncStorage.getItem('defaultApp');
+            const value = await AsyncStorage.removeItem('defaultApp');
 
             if(value !== null) {
                 this.props.setDefaultApp(JSON.parse(value)); 
@@ -82,7 +83,7 @@ class AppNavContainer extends Component {
     loadSessionAppsState = async () => {
 
         try {
-            const value = await AsyncStorage.getItem('sessionApps');
+            const value = await AsyncStorage.removeItem('sessionApps');
 
             if(value !== null) {
                 const sessionApps = {
@@ -108,7 +109,7 @@ class AppNavContainer extends Component {
     loadSessionNumberVerified = async () => {
 
         try {
-            const value = await AsyncStorage.getItem('numberVerify');
+            const value = await AsyncStorage.removeItem('numberVerify');
 
             if(value !== null) {
                 
@@ -208,10 +209,7 @@ class AppNavContainer extends Component {
         return (
             <View style = {style.container}>
                 <NavigationContainer ref={navigationRef}>
-                {this.state.init === WELCOME ? <WelcomeNavigator />
-                : this.state.init === OWNERTABNAVIGATOR ? <OwnerTabNavigator />
-                :<AuthNavigator />
-                }
+                <DriverTabNavigator/>
                 </NavigationContainer>
             </View>
         );

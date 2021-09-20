@@ -22,4 +22,10 @@ export const OWNERPROFILE = 'ownerProfile';
 export const CARREGISTERING = 'carRegistering';
 
 export const OWNEREDITPROFILE = 'UpdateProfile';
-export const OWNERSETTINGSSCREEN = 'SettingsScreen'; 
+export const OWNERSETTINGSSCREEN = 'SettingsScreen';
+
+export const DRIVERSETTINGS = 'driverSettings';
+export const DRIVERPROFILE = 'driverProfile';
+
+export const DRIVEREDITPROFILE = 'UpdateProfile';
+export const DRIVERSETTINGSSCREEN = 'SettingsScreen';
