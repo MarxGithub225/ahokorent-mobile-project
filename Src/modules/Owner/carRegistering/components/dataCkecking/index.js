@@ -128,7 +128,7 @@ class dataCkecking extends Component {
         this.props.setData(this.state.inputData, this.props)
       };
     
-     goBack = () =>{
+      goBack = () =>{
         const { back } = this.props;
         // Go to previous step
         back();
@@ -203,13 +203,11 @@ class dataCkecking extends Component {
         this.setState({
           inputData: {...this.state.inputData, [name]: value}
         });
-
         
       }
 
       componentDidMount() {
         this.setDataItems()
-        
         setTimeout(() => {
             this.setState({isLoading: false})
             this.setState({brandSelected: this.props.globalReducer.brands[0].libelle})
